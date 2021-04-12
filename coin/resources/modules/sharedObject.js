@@ -3,7 +3,8 @@ const sharedObject = {
     selectMarket : "upbit/market",
     accounts : "accounts",
     uuidv4 : "uuidv4",
-    marketOrder : "upbit/coin/orders"
+    marketOrders : "upbit/coin/orders",
+    marketOrder : "upbit/coin/order"
 }
 
 module.exports = {

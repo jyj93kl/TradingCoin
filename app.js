@@ -59,9 +59,14 @@ io.sockets.on('connection', function (socket) { // connection이 발생할 때 �
 	socket.on(sharedObject.accounts, async function(data){ 
 		sendResponse(socket, sharedObject.accounts, data)
 	});
+	socket.on(sharedObject.marketOrders, async function(data){ 
+		sendResponse(socket, sharedObject.marketOrders, data)
+	});
 	socket.on(sharedObject.marketOrder, async function(data){ 
 		sendResponse(socket, sharedObject.marketOrder, data)
 	});
+
+	
 	// socket 통신 종료 후  DBConnection end
 	socket.on('disconnect', function () {
 		console.log('user disconnected');
@@ -72,6 +77,8 @@ let sendResponse = function(socket, message, data){
 	let request = JSON.parse(data);
 	if(request.method == "GET"){
 		getMethod(socket, message, request);
+	} else if(request.method == "DELETE"){
+		deleteMethod(socket, message, request);
 	} else {
 		postMethod(socket, message, request);
 	}
@@ -118,6 +125,29 @@ async function postMethod(socket, message, requestData){
 		} else {
 			// console.log("code : " + res.statusCode + ", post request result fail", result);
 			socket.emit(message, socketCallback(-1, sendCall.url, result));
+		}
+	});
+}
+
+async function deleteMethod(socket, message, requestData){
+	let sendCall = {
+		method : "DELETE",
+		url : requestData.callUrl,
+		headers: {
+			Authorization: key.createToken(requestData)
+		}
+	}
+	if(requestData.queryString){
+		sendCall["json"] = requestData.queryString;
+	}
+	// console.log(sendCall);
+	await request(sendCall, function (err, res, result) {
+		if(res.statusCode == 200){
+			// console.log("code : " + res.statusCode + ", get request result success", result);
+			socket.emit(message, socketCallback(1, result));
+		} else {
+			// console.log("code : " + res.statusCode + ", get request result fail", result);
+			socket.emit(message, socketCallback(-1, result));
 		}
 	});
 }

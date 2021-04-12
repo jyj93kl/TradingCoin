@@ -4,7 +4,8 @@ const upbitUrl = {
     selectMarkets : "https://api.upbit.com/v1/market/all?isDetails=true",
     selectMarket  : "https://api.upbit.com/v1/ticker?markets=",
     selectTargetCandle : "https://api.upbit.com/v1/candles/minutes/",
-    marketOrder : "https://api.upbit.com/v1/orders"
+    marketOrders : "https://api.upbit.com/v1/orders",
+    marketOrder : "https://api.upbit.com/v1/order"
 }
 
 const dynamicUrl = {
@@ -24,8 +25,13 @@ const market = [
     {"market_warning":"NONE","market":"KRW-TT","korean_name":"썬더토큰","english_name":"Thunder Token"},
     {"market_warning":"NONE","market":"KRW-DOGE","korean_name":"도지코인","english_name":"Dogecoin"}
 ]
-const buyPrice = 6000;
 
+const buyPrice = 6000;
+const highPercent = 10;
+const lowPercent = -5;
+const marketBuy = 0;
+const marketSell = 1;
+const enter = "\n";
 // const market = [
 // 	{"market_warning":"NONE","market":"KRW-BTC","korean_name":"비트코인","english_name":"Bitcoin"},
 // 	{"market_warning":"NONE","market":"KRW-ETH","korean_name":"이더리움","english_name":"Ethereum"},

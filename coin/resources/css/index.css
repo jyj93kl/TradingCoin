@@ -1,0 +1,17 @@
+body {
+    padding: 0px;
+    margin: 0px;
+}
+#scriptContainer{
+    height: 450px;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    padding: 0;
+    margin: 0;
+    background: black;
+    overflow: auto;
+}
+#scriptContainer .log_write{
+    color: white;
+}

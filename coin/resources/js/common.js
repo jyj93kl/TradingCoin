@@ -8,6 +8,9 @@ const CommonUtil = {
         console.log("==== send url ====", url);
         console.log("==== send request ====", request);
         sc.getSocket().emit(url, JSON.stringify(request));
+    },
+    getYield : function(nowMarket,assets){
+        return new Number( ( (assets.balance * nowMarket.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
     }
 }
 
