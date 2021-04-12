@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+.round_button {
+    width: auto;
+    margin: auto;
+    padding: 4px 22px;
+    transition: opacity .2s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.round_button.buy {
+    color: #ffffff;
+    background-color: #bd1818;
+}
+.round_button.sell {
+    color: #fff;
+    background-color: #203992;
+}
+
+.log_buy {
+    background-color: #bd1818;
+    padding: 3px;
+    font-weight: 900;
+    font-size: 0.9rem;
+}
+.log_sell {
+    background-color: #203992;
+    padding: 3px;
+    font-weight: 900;
+    font-size: 0.9rem;
+}
+
+.cryptos {
+    display: flex;
+    width: 100%;
+    /* max-width: 1440px; */
+    margin: 0 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.crypto {
+    width: calc(100% / 7);
+    background-color: #152229;
+    padding: 0.6rem;
+    /* margin: 2px; */
+    border-right: 1px solid rgba(183, 183, 183, 0.5);
+    border-bottom: 1px solid rgba(183, 183, 183, 0.5);
+}
+.crypto h4 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 4px 4px 6px;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(183, 183, 183, 0.2)
+}
+.crypto .sell_type {
+    color: #ffffff;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    padding: 10px 4px;
+}
+.crypto .sell_type input[type="radio"] {
+    margin-right: 4px;
+}
+.crypto .amount {
+    padding: 6px 4px;
+}
+.crypto .amount dl {
+    display: flex;
+    color: #ffffff;
+    position: relative;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.crypto .amount dt {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    width: 40%;
+}
+.crypto .amount dd {
+    font-weight: 900;
+    font-size: 1.1rem;
+    width: 60%;
+    text-align: right;
+}
+.crypto .amount dt,
+.crypto .amount dd {
+    padding: 2px;
+}

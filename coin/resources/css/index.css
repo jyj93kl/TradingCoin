@@ -1,17 +1,67 @@
-body {
-    padding: 0px;
-    margin: 0px;
-}
-#scriptContainer{
-    height: 450px;
-    width: 100%;
-    position: fixed;
-    bottom: 0px;
+@charset "utf-8";
+
+* {
     padding: 0;
     margin: 0;
-    background: black;
-    overflow: auto;
+    box-sizing: border-box;
+    font-size: 13px;
+    line-height: 1.4;
+}
+img {
+    width: 100%;
+}
+a {
+    text-decoration: none;
+    outline: 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.log-toggle_button {
+    position: fixed;
+    right: 2vh;
+    cursor: pointer;
+    border: 1px solid;
+    padding: 6px 16px;
+}
+
+#scriptContainer {
+    font-family: monospace,monospace;
+    color: #ffffff;
+    padding: 1.4rem 1.2rem;
+    overflow-y: auto;
+    background: #121619;
+    z-index: 100;
+    height: 40vh;
+    border-top: 14px solid #000000;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    transition: height 0.2s ease-in-out;
+    /* height: 10vh; */
+}
+#scriptContainer.log_close {
+    height: 10vh;
 }
 #scriptContainer .log_write{
     color: white;
+    white-space: break-spaces;
+    word-break: break-all;
+    padding: 2px 0;
 }

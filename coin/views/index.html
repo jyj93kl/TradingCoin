@@ -9,14 +9,21 @@
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="text/css" rel="stylesheet" href="../resources/css/index.css" />
+	<link type="text/css" rel="stylesheet" href="../resources/css/style.css" />
 </head>
 
 <body>
-	<button id="selectBtn">보유 자산 수동 조회</button>
-	<button id="classifyBtn">기능 테스트 버튼</button>
-	<pre id="container"></pre>
-	<pre id="testContainer"></pre>
-	<div id="scriptContainer"></div>
+	<div id="content">
+		<div id="cryptos" class="cryptos"></div>
+		
+		<button id="selectBtn">보유 자산 수동 조회</button>
+		<button id="classifyBtn">기능 테스트 버튼</button>
+		<div id="container"></div>
+		<div id="testContainer"></div>
+		<div id="scriptContainer">
+			<span class="log-toggle_button log_close">open/close</span>
+		</div>
+	</div>
 </body>
 <script type="text/javascript" src="../resources/plugins/jquery/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="../resources/plugins/websocket/sockjs.min.js"></script>

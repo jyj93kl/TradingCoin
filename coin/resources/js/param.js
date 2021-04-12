@@ -22,8 +22,8 @@ const market = [
     {"market_warning":"NONE","market":"KRW-BORA","korean_name":"보라","english_name":"BORA"},
     {"market_warning":"NONE","market":"KRW-PCI","korean_name":"페이코인","english_name":"PayCoin"},
     {"market_warning":"NONE","market":"KRW-PUNDIX","korean_name":"펀디엑스","english_name":"Pundi X"},
-    {"market_warning":"NONE","market":"KRW-TT","korean_name":"썬더토큰","english_name":"Thunder Token"},
-    {"market_warning":"NONE","market":"KRW-DOGE","korean_name":"도지코인","english_name":"Dogecoin"}
+    {"market_warning":"NONE","market":"KRW-TT","korean_name":"썬더토큰","english_name":"Thunder Token"}
+    // {"market_warning":"NONE","market":"KRW-DOGE","korean_name":"도지코인","english_name":"Dogecoin"}
 ]
 
 const buyPrice = 6000;

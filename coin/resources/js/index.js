@@ -15,12 +15,16 @@ function initializeApplication(){
 
 function initializeComponent(){
     // logWrite("initializeComponent");
+    document.getElementsByClassName("log-toggle_button")[0].addEventListener("click", function(e) {
+        let $scriptContainer = document.getElementById("scriptContainer");
+        $scriptContainer.classList = ($scriptContainer.classList == "log_close") ? "" : "log_close";
+    })
 }
 
 function initializeBindEvent(){
     // logWrite("initializeComponent");
     document.getElementById("selectBtn").addEventListener("click", function(e){
-        document.getElementById("container").innerHTML = ""
+        document.getElementById("cryptos").innerHTML = ""
         selectAccounts();
     });
     document.getElementById("classifyBtn").addEventListener("click", function(e){
@@ -61,12 +65,9 @@ function orderTarget(marketData, type){
         시장가 매수 시 volume null 
         시장가 매도 시 price null 
     */
-    let orderData = new Object(),marketName, price, volume;
-    if(marketData.market){
-        marketName = marketData.market;
-    } else {
-        marketName = marketData.unit_currency + "-" + marketData.currency;
-    }
+    let orderData = new Object();
+    let marketName = marketData.market ? marketData.market : marketData.unit_currency + "-" + marketData.currency;
+
     orderData["market"] = marketName;
     orderData["side"] = (type == 0) ? "bid" : "ask";
     orderData["volume"] = (type == 0) ? null : marketData.balance;
@@ -74,9 +75,9 @@ function orderTarget(marketData, type){
     orderData["ord_type"] = (type == 0) ? "price" : "market";
     orderData["identifier"] = $Global["uniqueTicket"];
 
-    logWrite("코인 정보 - " + marketName + "/ 결재 정보 - " + ((type == 0) ? "매수" : "매도"));
+    logWrite(((type == 0) ? "<span class='log_buy'>매수</span>" : "<span class='log_sell'>매도</span>") + " " + marketName);
     // orderMarket(orderData);
-}
+} 
 
 /* 시장가 매수,매도 */
 function orderMarket(orderData){
@@ -86,6 +87,7 @@ function orderMarket(orderData){
     request["callUrl"] = upbitUrl.marketOrders;
     request["queryString"] = orderData;
     logWrite("시장가 매수,매도 API 데이터", request);
+
     CommonUtil.sendMessage(serverSocket, "POST", $Global["message"].marketOrders, request, function(data){
         let response = JSON.parse(data);
         logWrite("시장가 매수,매도 API 결과", response);
@@ -97,73 +99,118 @@ function selectAccounts(){
     let request = new Object();
     request["method"] = "GET";
     request["callUrl"] = upbitUrl.accounts;
- 
+    
     CommonUtil.sendMessage(serverSocket, "GET", $Global["message"].accounts, request, function(data){
         let response = JSON.parse(data);
         initAccounts(response.data);
     });
 }
 
+function createCrypto(list) {
+    let $crypto = document.createElement("div");
+    $crypto.classList = "crypto";
+
+    let $name = document.createElement("h4");
+    $name.innerHTML = list.currency+"/"+list.unit_currency;
+
+    let $sellType = document.createElement("div");
+    $sellType.classList = "sell_type";
+        let $radio = document.createElement("input");
+        $radio.type = "radio";
+        $radio.checked = "checked";
+        $sellType.append($radio);
+        $sellType.append("시장");
+    
+    let $amount = document.createElement("div");
+    $amount.classList = "amount";
+        let $dl = document.createElement("dl");
+        let $dt = document.createElement("dt");
+        let $dd = document.createElement("dd");
+
+        $dt.innerHTML = "보유수량";
+        $dd.innerHTML = list.balance;
+        $dl.append($dt);
+        $dl.append($dd);
+
+        $dt = document.createElement("dt");
+        $dd = document.createElement("dd");
+        $dt.innerHTML = "매수평균가";
+        $dd.innerHTML = Math.round(list.avg_buy_price).toLocaleString();
+        $dl.append($dt);
+        $dl.append($dd);
+
+        $dt = document.createElement("dt");
+        $dd = document.createElement("dd");
+        $dt.innerHTML = "매수금액";
+        $dd.innerHTML = Math.round((list.balance * list.avg_buy_price)).toLocaleString();
+        $dl.append($dt);
+        $dl.append($dd);
+
+        $amount.append($dl);
+    
+    $crypto.append($name);
+    $crypto.append($sellType);
+    $crypto.append($amount);
+
+
+    button = document.createElement("button")
+    // button.innerHTML = list[i].currency + " 시장가 매수";
+    button.innerHTML = "매수";
+    button.classList = "round_button buy"
+    button.addEventListener("click", function(e){
+        if(confirm("누르면 정말 사짐")){
+            orderData = new Object();
+            orderData["market"] = listunit_currency + "-" + list.currency;
+            orderData["side"] = "bid";
+            orderData["volume"] = null;
+            orderData["price"] = buyPrice;
+            orderData["ord_type"] = "price";
+            orderData["identifier"] = $Global["uniqueTicket"];
+            orderTarget(orderData, marketBuy);
+            logWrite("<span class='log_buy'>매수</span> : " + list.currency + "/" + list.unit_currency);
+        } else {
+            logWrite("<span class='log_buy'>매수 취소</span> : " + list.currency + "/" + list.unit_currency);
+        }
+    });
+    $crypto.append(button);
+
+    button = document.createElement("button");
+    // button.innerHTML = list[i].currency + " 시장가 매도";
+    button.innerHTML = "매도";
+    button.classList = "round_button sell"
+    button.addEventListener("click", function(e){
+        if(confirm("누르면 정말 팔림")){
+            orderData = new Object();
+            orderData["market"] = list.unit_currency + "-" + list.currency;
+            orderData["side"] = "ask";
+            orderData["volume"] =  list.balance;
+            orderData["price"] = null;
+            orderData["ord_type"] = "market";
+            orderData["identifier"] = $Global["uniqueTicket"];
+            orderTarget(orderData, marketSell);
+            logWrite("<span class='log_sell'>매도</span> : " + list.currency + "/" + list.unit_currency);
+        } else {
+            logWrite("<span class='log_sell'>매도 취소</span> : " + list.currency + "/" + list.unit_currency);
+        }
+    });
+    $crypto.append(button);
+
+    button = document.createElement("button")
+    button.innerHTML = list.currency + " 현재 금액 조회";
+    button.addEventListener("click", function(e){ 
+        selectMarketOne(list)
+    });
+    $crypto.append(button);
+
+    return $crypto;
+}
 function initAccounts(data){
-    let list = JSON.parse(data), button, $container = document.getElementById("container");
-    logWrite("보유 자산 내역 조회", list);
-    $container.append("보유 자산 내역" + enter);
-    for(let i = 0 ; i < list.length; i++) {
-        $container.append(list[i].unit_currency 
-            + "-" + list[i].currency 
-            + " : " + list[i].balance 
-            + ", 평균 단가 : " + list[i].avg_buy_price
-            + ". 총 매수 금액 : " + Math.round((list[i].balance * list[i].avg_buy_price)).toLocaleString()
-        );
+    let listData = JSON.parse(data);
+    let $cryptos = document.getElementById("cryptos");
+    logWrite("보유 자산 내역 조회", listData);
 
-        button = document.createElement("button")
-        button.innerHTML = list[i].currency + " 시장가 매수";
-        button.addEventListener("click", function(e){
-            if(confirm("누르면 정말 사짐")){
-                orderData = new Object();
-                orderData["market"] = list[i].unit_currency + "-" + list[i].currency;
-                orderData["side"] = "bid";
-                orderData["volume"] = null;
-                orderData["price"] = buyPrice;
-                orderData["ord_type"] = "price";
-                orderData["identifier"] = $Global["uniqueTicket"];
-                orderTarget(orderData, marketBuy);
-                logWrite("매수 코인 : " + list[i].unit_currency + "-" + list[i].currency + '');
-            } else {
-                logWrite("매수 코인 취소 : " + list[i].unit_currency + "-" + list[i].currency + '');
-            }
-        });
-
-        $container.appendChild(button);
-        button = document.createElement("button")
-        button.innerHTML = list[i].currency + " 시장가 매도";
-        button.addEventListener("click", function(e){
-            if(confirm("누르면 정말 팔림")){
-                orderData = new Object();
-                orderData["market"] = list[i].unit_currency + "-" + list[i].currency;
-                orderData["side"] = "ask";
-                orderData["volume"] =  list[i].balance;
-                orderData["price"] = null;
-                orderData["ord_type"] = "market";
-                orderData["identifier"] = $Global["uniqueTicket"];
-                orderTarget(orderData, marketSell);
-                logWrite("매도 코인 취소 : " + list[i].unit_currency + "-" + list[i].currency + '');
-            } else {
-                logWrite("매도 코인 취소 : " + list[i].unit_currency + "-" + list[i].currency + '');
-            }
-        });
-        $container.appendChild(button);
-
-        button = document.createElement("button")
-        button.innerHTML = list[i].currency + " 현재 금액 조회";
-        button.addEventListener("click", function(e){ 
-            selectMarketOne(list[i])
-        });
-        $container.appendChild(button);
-
-        $container.appendChild(button);
-        $container.append(enter);
-           
+    for(key in listData) {
+        $cryptos.append(createCrypto(listData[key]))
     }
 }
 /* 선택 코인 조회 */
@@ -350,8 +397,8 @@ function cancleAssets(){
 /* 미보유 매수 */
 function notExistAssetsBuy(assets){
     logWrite("미보유 매수 시작");
-    for(let i = 0 ; i < assets.length; i++){
-        orderTarget(assets[i], marketBuy);        
+    for(key in assets) {
+        orderTarget(assets[key], marketBuy);        
     }
     logWrite("미보유 매수 종료");
 }
@@ -385,11 +432,12 @@ function logWrite(msg, object){
     logWrite.classList = "log_write";
 
     if(object != undefined){
-        logWrite.innerHTML = "[" + new Date().toLocaleString() + "] - " + msg + enter + ((typeof(object) == "object") ? JSON.stringify(object, null, '\t') : object); 
+        logWrite.innerHTML = "<span style='opacity: 0.4;'>[" + new Date().toLocaleString() + "]</span> - " + msg + enter + ((typeof(object) == "object") ? JSON.stringify(object, null, '\t') : object); 
     } else {
-        logWrite.innerHTML = "[" + new Date().toLocaleString() + "] - " + msg; 
+        logWrite.innerHTML = "<span style='opacity: 0.4;'>[" + new Date().toLocaleString() + "]</span> - " + msg; 
     }
     logContainer.appendChild(logWrite);
+    document.querySelector(".log_write:last-child").scrollIntoView();
 }
 
 /* 주문 리스트 가져오기 */
