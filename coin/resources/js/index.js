@@ -61,15 +61,20 @@ function orderTarget(marketData, type){
         시장가 매수 시 volume null 
         시장가 매도 시 price null 
     */
-    let orderData = new Object();
-    orderData["market"] = (type == 0) ? marketData.market : (marketData.unit_currency + "-" + marketData.currency);
+    let orderData = new Object(),marketName, price, volume;
+    if(marketData.market){
+        marketName = marketData.market;
+    } else {
+        marketName = marketData.unit_currency + "-" + marketData.currency;
+    }
+    orderData["market"] = marketName;
     orderData["side"] = (type == 0) ? "bid" : "ask";
     orderData["volume"] = (type == 0) ? null : marketData.balance;
     orderData["price"] = (type == 0) ? buyPrice : null;
     orderData["ord_type"] = (type == 0) ? "price" : "market";
     orderData["identifier"] = $Global["uniqueTicket"];
 
-    logWrite("코인 정보 - " + ((type == 0) ? marketData.market : (marketData.unit_currency + "-" + marketData.currency)) + "/ 결재 정보 - " + ((type == 0) ? "매수" : "매도"));
+    logWrite("코인 정보 - " + marketName + "/ 결재 정보 - " + ((type == 0) ? "매수" : "매도"));
     // orderMarket(orderData);
 }
 
