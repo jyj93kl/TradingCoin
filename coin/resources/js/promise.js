@@ -3,20 +3,13 @@
     전체 계좌 조회 - GET
 */
 function getHoldAssets(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.holdAssets;
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.holdAssets;
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.holdAssets;
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].holdAssets, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].holdAssets, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
@@ -25,20 +18,13 @@ function getHoldAssets(request) {
     주문 가능 정보 GET
 */
 function getOrderChance(request){
-    if(request != undefined){
-        request["callUrl"] = requestUrl.orderChance;
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.orderChance;
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.orderChance;
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].orderChance, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].orderChance, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
@@ -48,41 +34,26 @@ function getOrderChance(request){
     주문 리스트 조회 - GET
 */
 function getOrders(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.orders + "?" + $.param(request["queryString"]);
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.orders + "?" + $.param(request["queryString"]);
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.orders + "?" + $.param(request["queryString"]);
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].orders, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].orders, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(response.data);
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
 
 function postOrders(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.orders;
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.orders;
-    }
-    request["type"] = 1;
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.orders;
+    requestData["type"] = 1;
 
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "POST", $Global["serverMessage"].orders, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "POST", $Global["serverMessage"].orders, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
@@ -92,39 +63,25 @@ function postOrders(request) {
     개별 주문 조회 - GET
 */
 function getOrder(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.order;
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.order;
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.order;
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].order, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].order, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
 function deleteOrder(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.order + "?" + $.param(request["queryString"]);
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.order + "?" + $.param(request["queryString"]);
-    }
-    request["type"] = 1;
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.order + "?" + $.param(request["queryString"]);
+    requestData["type"] = 1;
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "DELETE", $Global["serverMessage"].order, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "DELETE", $Global["serverMessage"].order, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                resolve(response.data);
-            } else {
-                resolve(response.data);
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
@@ -133,20 +90,13 @@ function deleteOrder(request) {
     마켓 전체 조회 - GET
 */
 function getMarketAll(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.marketAll;
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.marketAll;
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.marketAll;
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].marketAll, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].marketAll, requestData, function(data) {
             let response = JSON.parse(data);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
@@ -155,21 +105,13 @@ function getMarketAll(request) {
     마켓 선택 조회 - GET
 */
 function getTicker(request) {
-    if(request != undefined){
-        request["callUrl"] = requestUrl.ticker + request["marketStr"];
-    } else {
-        let request = new Object();
-        request["callUrl"] = requestUrl.ticker + request["marketStr"];
-    }
+    let requestData = (request != undefined) ? request : new Object();
+    requestData["callUrl"] = requestUrl.ticker + request["marketStr"];
+
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].ticker, ((request == undefined) ? new Object() : request), function(data) {
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].ticker, requestData, function(data) {
             let response = JSON.parse(data);
-            console.log(response);
-            if(response.result == -1){
-                reject(JSON.parse(response.data));
-            } else {
-                resolve(JSON.parse(response.data));
-            }
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });
     });
 }
