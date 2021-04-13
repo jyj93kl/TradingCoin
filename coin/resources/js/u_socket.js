@@ -22,7 +22,7 @@ const bitSocket = {
     this.param.socekt = null;
   },
   initialize : function(){
-    this.param.socket = new WebSocket(upbitUrl.websocket);
+    this.param.socket = new WebSocket(requestUrl.upbitSocket);
 
     this.param.socket.onopen = function(event) {
       console.log("Server open message : ", event);

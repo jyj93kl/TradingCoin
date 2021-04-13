@@ -1,16 +1,13 @@
-const upbitUrl = {
-    websocket : "wss://api.upbit.com/websocket/v1",
-    accounts : "https://api.upbit.com/v1/accounts",
-    selectMarkets : "https://api.upbit.com/v1/market/all?isDetails=true",
-    selectMarket  : "https://api.upbit.com/v1/ticker?markets=",
-    selectTargetCandle : "https://api.upbit.com/v1/candles/minutes/",
-    marketOrders : "https://api.upbit.com/v1/orders",
-    marketOrder : "https://api.upbit.com/v1/order"
+const requestUrl = {
+    upbitSocket : "wss://api.upbit.com/websocket/v1",
+    holdAssets : "https://api.upbit.com/v1/accounts",
+    orders : "https://api.upbit.com/v1/orders",
+    order : "https://api.upbit.com/v1/order",
+    orderChance : "https://api.upbit.com/v1/order/chance",
+    marketAll : "https://api.upbit.com/v1/market/all",
+    ticker : "https://api.upbit.com/v1/ticker?markets=",
 }
 
-const dynamicUrl = {
-    selectTargetCandle : "https://api.upbit.com/v1/candles/minutes/" 
-}
 
 const market = [
     {"market_warning":"NONE","market":"KRW-STORJ","korean_name":"스토리지","english_name":"Storj"},

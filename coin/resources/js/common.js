@@ -7,10 +7,15 @@ const CommonUtil = {
         console.log("==== send method ====", method);
         console.log("==== send url ====", url);
         console.log("==== send request ====", request);
+        /* request push method */
+        request["method"] = method;
         sc.getSocket().emit(url, JSON.stringify(request));
     },
     getYield : function(nowMarket,assets){
         return new Number( ( (assets.balance * nowMarket.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
+    },
+    getMarketName : function(nowMarket){
+        return nowMarket.market ? nowMarket.market : nowMarket.unit_currency + "-" + nowMarket.currency;
     }
 }
 
