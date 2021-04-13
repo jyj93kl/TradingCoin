@@ -59,17 +59,21 @@ function initAssets(){
             if(data[key].currency !== "KRW") {
                 template += createCrypto(data[key]);
             } else {
-                document.getElementById("totalKRW").innerHTML = '<i class="fas fa-won-sign"></i> ' + Math.round(data[key].balance).toLocaleString();
                 totalBalanceMoney = data[key].balance;
                 totalAssetsMoney += Math.round(totalBalanceMoney);
             }
         }
-        document.getElementsByClassName("assets-crypto_lists")[0].innerHTML = template;
-        document.getElementById("totalAssetsMoney").innerHTML = Math.round(totalAssetsMoney).toLocaleString();
-        document.getElementById("totalAssets").innerHTML = ' <i class="fab fa-cuttlefish"></i> ' + Math.round(totalAssetsMoney - totalBalanceMoney).toLocaleString();
+        fillTotalAssetsSection(template);
     }).catch(function(err) {
         logWrite("보유 자산 내역 조회 오류 발생", err);
     });
+}
+
+function fillTotalAssetsSection(template) {
+    document.getElementsByClassName("assets-crypto_lists")[0].innerHTML = template;
+    document.getElementById("totalAssetsMoney").innerHTML = Math.round(totalAssetsMoney).toLocaleString();
+    document.getElementById("totalAssets").innerHTML = '<i class="fab fa-cuttlefish"></i> ' + Math.round(totalAssetsMoney - totalBalanceMoney).toLocaleString();
+    document.getElementById("totalKRW").innerHTML = '<i class="fas fa-won-sign"></i> ' + Math.round(totalBalanceMoney).toLocaleString();
 }
 
 function createCrypto(list) {
