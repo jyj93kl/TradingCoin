@@ -17,20 +17,44 @@
 
 <body>
 	<div id="moblie_wrap">
+		<section>
+			<h2 class="page-title">
+				<a href="javascript:void(0)" id="refreshAssets"><i class="fas fa-sync-alt"></i></a>
+				Wallet
+				<a href="javascript:void(0)" id="settings"><i class="fas fa-cog"></i></a>
+			</h2>
+
+		</section>
+
+		<section class="assets-info_total">
+			<p>Total Assets (KRW)</p>
+			<div id="totalAssetsMoney"></div>
+		</section>
+
+		<section class="assets-crypto">
+			<h4 class="section-title">Assets Crypto</h4>
+			<div class="assets-crypto_lists"></div>
+		</section>
+
+		<div id="underBlock" style="height: 50px;"></div>
+
 		<nav class="navigator">
-			<div class="item">
-				<a href="#"><i class="fas fa-wallet"></i></a>
+			<div class="item selected">
+				<a href="#"><i class="fab fa-google-wallet"></i></a>
 			</div>
 			<div class="item">
-				<a href="#"><i class="fas fa-wallet"></i></a>
+				<a href="#"><i class="fas fa-exchange-alt"></i></a>
 			</div>
 			<div class="item">
-				<a href="#"><i class="fas fa-wallet"></i></a>
+				<a href="#"><i class="fas fa-chart-pie"></i></a>
 			</div>
 			<div class="item">
-				<a href="#"><i class="fas fa-wallet"></i></a>
+				<a href="#"><i class="fas fa-smile"></i></a>
 			</div>
 		</nav>
+	</div>
+	<div id="scriptContainer" style="display: none;">
+		<span class="log-toggle_button log_close">open/close</span>
 	</div>
 	<!-- <div id="content">
 		<div id="cryptos" class="cryptos"></div>
@@ -47,7 +71,8 @@
 <script type="text/javascript" src="../resources/js/param.js"></script>
 <script type="text/javascript" src="../resources/js/n_socket.js"></script>
 <script type="text/javascript" src="../resources/js/u_socket.js"></script>
-<script type="text/javascript" src="../resources/js/index.js"></script>
+<!-- <script type="text/javascript" src="../resources/js/index.js"></script> -->
+<script type="text/javascript" src="../resources/js/promise.js"></script>
 <script type="text/javascript" src="../resources/js/m_main.js"></script>
 
 </html>

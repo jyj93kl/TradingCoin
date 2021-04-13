@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 :root {
-  --color-primary: #e5c195;
+  --color-primary: #ffca89;
   --color-black: #28334a;
   --color-white: #ffffff;
   --color-gray: #687080;
@@ -24,35 +24,131 @@
   color: var(--color-white-sub);
 }
 body {
-  background: var(--gradient-dark);
+  background-color: var(--color-black);
   width: 100vw;
   height: 100vh;
 }
 #moblie_wrap {
   margin: 0 auto;
+  width: 100vw;
   max-width: 900px;
-  height: 100%;
+  height: 100vh;
   background-color: var(--color-black);
   position: relative;
+  box-sizing: content-box;
 }
 
 /* navigator - bottom */
 .navigator {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   background-color: var(--color-black);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 10px 0 14px;
+  padding: 8px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 900px;
 }
 .navigator .item {
   width: calc(100% / 4);
   padding: 0.6rem;
   text-align: center;
 }
-.navigator .item i {
-  font-size: 1.4rem;
+.navigator .item.selected i {
+  color: var(--color-primary);
+}
+
+.page-title {
+  color: var(--color-white);
+  font-weight: 900;
+  padding: 2% 2%;
+  text-align: center;
+}
+.section-title {
+  font-size: 1.2rem;
+  color: var(--color-white);
+  font-weight: 700;
+  padding: 2% 2% 3%;
+}
+
+section {
+  padding: 4%;
+}
+
+.assets-info_total {
+  text-align: center;
+}
+.assets-info_total > p {
+  margin-bottom: 6px;
+  opacity: 0.8;
+  letter-spacing: 2px;
+}
+#totalAssetsMoney {
+  font-family: "Russo One", cursive;
+  font-size: 14vw;
+  font-weight: bold;
+  line-height: 1;
+  padding-top: 4px;
+  padding-bottom: 2px;
+  letter-spacing: 4px;
+  color: var(--color-primary);
+}
+
+.assets-crypto_lists {
+  padding: 2% 0;
+}
+.assets-crypto_item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: rgba(220, 220, 220, 0.06);
+  padding: 10px 12px;
+  border-radius: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+  position: relative;
+}
+.crypto_img {
+  width: 24px;
+  padding: 8px;
+  background-color: var(--color-black);
+  box-sizing: content-box;
+  border-radius: 6px;
+  margin-right: 4%;
+}
+.crypto_name {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+.crypto_desc {
+  width: calc(100% - 150px);
+}
+.crypto_price {
+  font-size: 0.9rem;
+  color: var(--color-white-sub);
+}
+.crypto_volumn {
+  text-align: right;
+  color: var(--color-white);
+  position: absolute;
+  right: 12px;
+}
+
+.crypto_volumn p {
+  opacity: 0.6;
+}
+
+#settings {
+  float: left;
+  opacity: 0.7;
+  font-size: 0.7rem;
+  padding-top: 0.15rem;
+}
+#refreshAssets {
+  float: right;
+  opacity: 0.7;
+  font-size: 0.7rem;
+  padding-top: 0.15rem;
 }

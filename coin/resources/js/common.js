@@ -15,6 +15,12 @@ const CommonUtil = {
         return new Number( ( (assets.balance * nowMarket.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
     },
     getMarketName : function(nowMarket){
+        return nowMarket.market ? nowMarket.market : nowMarket.currency + "/" + nowMarket.unit_currency;
+    },
+    transMarketName : function(market){
+        return market.split("/")[1] + "-" + market.split("/")[0];
+    },
+    selectMarketName : function(nowMarket){
         return nowMarket.market ? nowMarket.market : nowMarket.unit_currency + "-" + nowMarket.currency;
     }
 }

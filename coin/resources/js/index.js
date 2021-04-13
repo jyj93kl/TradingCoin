@@ -67,6 +67,34 @@ function initAssets(){
             $cryptos.append(createCrypto(listData[key]));
         }
 
+        let marketArr = new Array();
+        let marketName;
+        for(let i = 0 ; i < listData.length; i++){
+            marketName = CommonUtil.selectMarketName(listData[i]);
+            if(marketName != "KRW-KRW" && listData[i].avg_buy_price != 0){
+                marketArr.push(marketName)
+            }
+        }
+        let request = new Object();
+        console.log("marketArr.length", marketArr.length);
+        request["marketStr"] = marketArr.toLocaleString();
+        getTicker(request).then(function(data){
+            let nowData = data;
+            let myAssets,nowAssets;
+
+            for(let i in listData){
+                myAssets = listData[i];
+                for(let j in nowData){
+                    nowAssets = nowData[j];
+                    if(CommonUtil.selectMarketName(myAssets) == CommonUtil.selectMarketName(nowAssets)){
+                        logWrite(CommonUtil.selectMarketName(myAssets) + "의 수익률 : " + CommonUtil.getYield(nowAssets, myAssets));
+                        break;
+                    }
+                }   
+            }
+        }).catch(function(err) {
+            console.log(err);
+        }); 
         /* 테스트 소스 */
         assetsCoins();
     }).catch(function(err) {
