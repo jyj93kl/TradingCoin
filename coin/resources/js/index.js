@@ -135,8 +135,9 @@ function createCrypto(list) {
         $dt = document.createElement("dt");
         $dd = document.createElement("dd");
         $dt.innerHTML = "매수평균가";
-        $dd.innerHTML = Math.round(list.avg_buy_price).toLocaleString();
+        $dd.innerHTML = new Number(list.avg_buy_price).toFixed(2);
         $dl.append($dt);
+          
         $dl.append($dd);
 
         $dt = document.createElement("dt");
