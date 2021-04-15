@@ -174,23 +174,22 @@ function tradeAssets(request) {
             let alreadyCoin     = false;
             let targetCoin      = null;
             let existAssets     = new Array();
-
             /* 보유 자산 등록 */
-            for(let j in listData){
-                market = new Object();
-                market["isAssetsCoin"]          = true;
-                market["market"]                = CommonUtil.selectMarketName(listData[j]);     // KRW-BTC
-                market["korean_name"]           = CommonUtil.getKoreanName(market["market"]);   // 비트코인
-                market["english_name"]          = CommonUtil.getMarketName(listData[j]);        // BTC/KRW
-                market["balance"]               = listData[j]["balance"];
-                market["locked"]                = listData[j]["locked"];
-                market["avg_buy_price"]         = listData[j]["avg_buy_price"];
-                marketData[market["market"]]    = market;
-                if(market["market"] != "KRW-KRW" || market["market"] != "KRW-GRT"){
-                    continue; 
-                }
-                existAssets.push(market);
-            }
+            // for(let j in listData){
+            //     market = new Object();
+            //     market["isAssetsCoin"]          = true;
+            //     market["market"]                = CommonUtil.selectMarketName(listData[j]);     // KRW-BTC
+            //     market["korean_name"]           = CommonUtil.getKoreanName(market["market"]);   // 비트코인
+            //     market["english_name"]          = CommonUtil.getMarketName(listData[j]);        // BTC/KRW
+            //     market["balance"]               = listData[j]["balance"];
+            //     market["locked"]                = listData[j]["locked"];
+            //     market["avg_buy_price"]         = listData[j]["avg_buy_price"];
+            //     marketData[market["market"]]    = market;
+            //     if(market["market"] == "KRW-KRW" || market["market"] == "KRW-GRT"){
+            //         continue; 
+            //     }
+            //     existAssets.push(market);
+            // }
 
             getParamMarket().then(function(data){
                 logWrite("[tradeAssets][getParamMarket] - Success");
@@ -199,8 +198,8 @@ function tradeAssets(request) {
                     alreadyCoin = false;
                     targetCoin = paramMarket[i];
                     for(let j in listData){
-                        if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market && marketData.hasOwnProperty(paramMarket[i].market)){
-                        // if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market){
+                        // if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market && !marketData.hasOwnProperty(paramMarket[i].market)){
+                        if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market){
                             alreadyCoin = true;
                             market = new Object();
                             market["isAssetsCoin"]          = true;
@@ -228,12 +227,12 @@ function tradeAssets(request) {
                         marketData[market["market"]]    = market;
                     }
                 }
-
                 if(existAssets.length > 0){
                     let request = new Object();
                     request["marketStr"] = CommonUtil.getMarketArrayName(existAssets, returnString);
                     getTicker(request).then(function(data){
                         let tickers = data;
+                        console.log(tickers);
                         for(let i in tickers){
                             marketData[tickers[i].market]["low_price"]          = tickers[i].low_price;
                             marketData[tickers[i].market]["opening_price"]      = tickers[i].opening_price;

@@ -19,7 +19,7 @@ const CommonUtil = {
     },
     getPrevAssetsYield : function(assets){  // 전일 대비 수익률
         return new Number( ( (assets.balance * assets.prev_closing_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
-    },
+    }, 
     getMarketName : function(nowMarket){
         return nowMarket.market ? nowMarket.market : nowMarket.currency + "/" + nowMarket.unit_currency;
     },
@@ -51,6 +51,7 @@ const CommonUtil = {
             case "KRW-XYM"       : return "심볼";
             case "KRW-GRT"       : return "그래프";
             case "KRW-KRW"       : return "원화";
+            case "KRW-ETH"       : return "이더리움";
             default              : return null;
         }
     },
