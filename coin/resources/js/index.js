@@ -27,7 +27,7 @@ function initializeBindEvent(){
         initAssets();
     });
     document.getElementById("classifyBtn").addEventListener("click", function(e){
-        classifyAssets();
+        tradingCoinBot();
     });
     document.getElementById("waitBtn").addEventListener("click", function(e){
         initOrders();
@@ -59,13 +59,25 @@ function initAssets(){
         let listData = data;
         let $cryptos = document.getElementById("cryptos");
         /* 로그 작업 */
-        logWrite("[initAssets][tradeAssets] - 보유 자산 조회", data);
+        logWrite("[initAssets][tradeAssets] - 보유 자산 조회");
+        for(key in listData) {
+            logWrite( "[initAssets][tradeAssets] - "+
+            "코인 : "           + listData[key]["english_name"]                 +
+            ", 시가 : "         + listData[key]["opening_price"]               + 
+            ", 저가 : "         + listData[key]["low_price"]                   + 
+            ", 고가 : "         + listData[key]["high_price"]                  + 
+            ", 현재가 : "       + listData[key]["trade_price"]                 + 
+            ", 수익률 : "       + CommonUtil.getAssetsYield(listData[key]) )
+        }
+
         /* 화면 초기화 */
         document.getElementById("cryptos").innerHTML = ""
         /* 화면 드로잉 */
         for(key in listData) {
             $cryptos.append(createCrypto(listData[key]));
         }
+
+        
 
     }).catch(function(err) {
         console.log(err);
@@ -75,12 +87,11 @@ function initAssets(){
 
 function createCrypto(market) {
     let airDrop = (market.isAssetsCoin && market.avg_buy_price == 0) ? true : false;
-    let marketName = CommonUtil.getMarketName(market);
     let $crypto = document.createElement("div");
     $crypto.classList = "crypto";
 
     let $name = document.createElement("h4");
-    $name.innerHTML = marketName + ((market.isAssetsCoin) ? "" : " [미보유 코인]");
+    $name.innerHTML = market.korean_name + "(" +market.english_name  + ")" + ((market.isAssetsCoin) ? "" : " [미보유]");
     let $sellType = document.createElement("div");
     $sellType.classList = "sell_type";
         let $radio = document.createElement("input");
@@ -106,7 +117,6 @@ function createCrypto(market) {
             $dt.innerHTML = "매수평균가";
             $dd.innerHTML = new Number(market.avg_buy_price).toFixed(2);
             $dl.append($dt);
-              
             $dl.append($dd);
     
             $dt = document.createElement("dt");
@@ -116,6 +126,13 @@ function createCrypto(market) {
             $dl.append($dt);
             $dl.append($dd);
     
+            $dt = document.createElement("dt");
+            $dd = document.createElement("dd");
+            $dt.innerHTML = "수익률";
+            $dd.innerHTML = CommonUtil.getAssetsYield(market);
+            $dl.append($dt);
+            $dl.append($dd);
+
             $amount.append($dl);
         }
     
@@ -123,7 +140,7 @@ function createCrypto(market) {
     $crypto.append($sellType);
     $crypto.append($amount);
 
-    if(marketName != "KRW-KRW" && !airDrop){
+    if(market.market != "KRW-KRW" && !airDrop){
         button = document.createElement("button")
         // button.innerHTML = list[i].currency + " 시장가 매수";
         button.innerHTML = "매수";
@@ -131,7 +148,7 @@ function createCrypto(market) {
         button.addEventListener("click", function(e){
             if(confirm("누르면 정말 사짐")){
                 orderData = new Object();
-                orderData["market"] = marketName
+                orderData["market"] = market.market;
                 orderData["side"] = "bid";
                 orderData["volume"] = null;
                 orderData["price"] = buyPrice;
@@ -139,13 +156,13 @@ function createCrypto(market) {
                 orderData["identifier"] = $Global["uniqueTicket"];
                 orderTarget(orderData, marketBuy);
             } else {
-                logWrite("<span class='log_buy'>매수 취소</span> : " + marketName);
+                logWrite("<span class='log_buy'>매수 취소</span> : " + market.market);
             }
         });
         $crypto.append(button);
     }
 
-    if(market.isAssetsCoin && marketName != "KRW-KRW" && !airDrop){
+    if(market.isAssetsCoin && market.market != "KRW-KRW" && !airDrop){
         button = document.createElement("button");
         // button.innerHTML = list[i].currency + " 시장가 매도";
         button.innerHTML = "매도";
@@ -153,7 +170,7 @@ function createCrypto(market) {
         button.addEventListener("click", function(e){
             if(confirm("누르면 정말 팔림")){
                 orderData = new Object();
-                orderData["market"] = marketName;
+                orderData["market"] = market.market;
                 orderData["side"] = "ask";
                 orderData["volume"] =  market.balance;
                 orderData["price"] = null;
@@ -161,13 +178,13 @@ function createCrypto(market) {
                 orderData["identifier"] = $Global["uniqueTicket"];
                 orderTarget(orderData, marketSell);
             } else {
-                logWrite("<span class='log_sell'>매도 취소</span> : " + marketName);
+                logWrite("<span class='log_sell'>매도 취소</span> : " + market.market);
             }
         });
         $crypto.append(button);
     }
 
-    if(marketName != "KRW-KRW" && !airDrop){
+    if(market.market != "KRW-KRW" && !airDrop){
         button = document.createElement("button")
         button.classList = "round_button search";
         button.innerHTML = "조회";
@@ -187,12 +204,13 @@ function initAssetsOne(assets){
         let listData = data;
         let marketOne = listData[0];
         if(marketOne != undefined) {
-            logWrite("[initAssetsOne][getTicker] 코인 정보 조회 : " + CommonUtil.getMarketName(marketOne) +
-            ", 시가 : " + marketOne.opening_price + 
-            ", 저가 : " + marketOne.low_price + 
-            ", 고가 : " + marketOne.high_price + 
-            ", 현재가 : " + marketOne.trade_price + 
-            ((assets.balance != undefined ) ? ", 수익률 : " + CommonUtil.getYield(marketOne, assets) : "" ))
+            logWrite("[initAssetsOne][getTicker] "+
+            "코인 : "           + CommonUtil.getMarketName(marketOne)   +
+            ", 시가 : "         + marketOne.opening_price               + 
+            ", 저가 : "         + marketOne.low_price                   + 
+            ", 고가 : "         + marketOne.high_price                  + 
+            ", 현재가 : "       + marketOne.trade_price                 + 
+            ((assets.balance != undefined ) ? ", 수익률 : "             + CommonUtil.getYield(marketOne, assets) : "" ))
         } else {
             logWrite("[initAssetsOne][getTicker] - 조회 불가 정보 : " + CommonUtil.getMarketName(assets));
         }
@@ -214,4 +232,40 @@ function logWrite(msg, object){
     }
     logContainer.appendChild(logWrite);
     document.querySelector(".log_write:last-child").scrollIntoView();
+}
+
+/* 주문 리스트 가져오기 */
+function initOrders(market){
+    let orderData = new Object();
+    if(market != undefined) {
+        orderData["market"] = CommonUtil.getMarketName(market);
+    }
+    orderData["state"] = "wait";
+
+    let request = new Object();
+    request["callUrl"] = requestUrl.orders + "?" + $.param(orderData);
+    request["queryString"] = orderData;
+
+    logWrite("[initOrders] - 주문 리스트 가져오기 데이터", request);
+    getOrders(request).then(function(data){
+        logWrite("[initOrders][getOrders] - 주문 리스트 가져오기", data);
+    }).catch(function(err) {
+        logWrite("[initOrders][getOrders] - 주문 리스트 가져오기 오류 발생", err);
+    });
+}
+
+/* 주문 취소하기 */
+function deleteOrders(uuid){
+    let orderData = new Object();
+    orderData["uuid"] = uuid;
+
+    let request = new Object();
+    request["queryString"] = orderData;
+    
+    logWrite("[deleteOrders] - 주문 취소하기 데이터", request);
+    deleteOrder(request).then(function(data){
+        logWrite("[deleteOrders][deleteOrder] - 주문 취소하기", data);
+    }).catch(function(err) {
+        logWrite("[deleteOrders][deleteOrder] - 주문 취소하기 오류 발생", err);
+    });
 }

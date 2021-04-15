@@ -1,7 +1,7 @@
 /* 
     https://api.upbit.com/v1/accounts
     전체 계좌 조회 - GET
-    "currency"              : "KRW",
+    "currency"              : "BTC",
     "balance"               : "1000000.0",
     "locked"                : "0.0",
     "avg_buy_price"         : "0",
@@ -149,11 +149,11 @@ function getUuidv4(request) {
 /*
     자동 매수,매도 할 코인 목록 조회
     "market_warning"    : "NONE",
-    "market"            : "KRW-STORJ",
-    "korean_name"       : "스토리지",
-    "english_name"      : "Storj",
-    "coin_name"         : "STORJ",
-    "code_name"         : "STORJ/KRW"
+    "market"            : "KRW-BTC",
+    "korean_name"       : "비트코인",
+    "english_name"      : "BTC",
+    "coin_name"         : "BTC",
+    "code_name"         : "BTC/KRW"
 */
 function getParamMarket() {
     return new Promise(function(resolve, reject) {
@@ -163,6 +163,14 @@ function getParamMarket() {
 
 /*
     데이터 가공한 보유 / 미보유 재산 정보
+    "isAssetsCoin"      : 보유 여부 true : false,
+    "market"            : "KRW-BTC"
+    "korean_name"       : "비트코인" 
+    "english_name"      : "BTC/KRW"
+    "balance"           : 보유 수량
+    "locked"            : 주문 중 묶여있는 금액/수량
+    "avg_buy_price"     : 평균 단가
+    "coin_name"         : "BTC"
 */
 function tradeAssets(request) {
     return new Promise(function(resolve, reject) {
@@ -175,21 +183,22 @@ function tradeAssets(request) {
             let targetCoin      = null;
             let existAssets     = new Array();
             /* 보유 자산 등록 */
-            // for(let j in listData){
-            //     market = new Object();
-            //     market["isAssetsCoin"]          = true;
-            //     market["market"]                = CommonUtil.selectMarketName(listData[j]);     // KRW-BTC
-            //     market["korean_name"]           = CommonUtil.getKoreanName(market["market"]);   // 비트코인
-            //     market["english_name"]          = CommonUtil.getMarketName(listData[j]);        // BTC/KRW
-            //     market["balance"]               = listData[j]["balance"];
-            //     market["locked"]                = listData[j]["locked"];
-            //     market["avg_buy_price"]         = listData[j]["avg_buy_price"];
-            //     marketData[market["market"]]    = market;
-            //     if(market["market"] == "KRW-KRW" || market["market"] == "KRW-GRT"){
-            //         continue; 
-            //     }
-            //     existAssets.push(market);
-            // }
+            for(let j in listData){
+                market = new Object();
+                market["isAssetsCoin"]          = true;
+                market["market"]                = CommonUtil.selectMarketName(listData[j]);     // KRW-BTC
+                market["korean_name"]           = CommonUtil.getKoreanName(market["market"]);   // 비트코인
+                market["english_name"]          = CommonUtil.getMarketName(listData[j]);        // BTC/KRW
+                market["balance"]               = listData[j]["balance"];
+                market["locked"]                = listData[j]["locked"];
+                market["avg_buy_price"]         = listData[j]["avg_buy_price"];
+                market["low_price"]             = 0;
+                market["opening_price"]         = 0;
+                market["high_price"]            = 0;
+                market["trade_price"]           = 0;
+                market["prev_closing_price"]    = 0;
+                marketData[market["market"]]    = market;
+            }
 
             getParamMarket().then(function(data){
                 logWrite("[tradeAssets][getParamMarket] - Success");
@@ -201,20 +210,26 @@ function tradeAssets(request) {
                         // if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market && !marketData.hasOwnProperty(paramMarket[i].market)){
                         if(CommonUtil.selectMarketName(listData[j]) == paramMarket[i].market){
                             alreadyCoin = true;
-                            market = new Object();
+                            market = (marketData.hasOwnProperty(paramMarket[i].market)) ? marketData[paramMarket[i].market] : new Object();
                             market["isAssetsCoin"]          = true;
                             market["market"]                = CommonUtil.selectMarketName(listData[j]);  // KRW-BTC
-                            market["korean_name"]           = listData[j].korean_name;                   // 비트코인
+                            market["korean_name"]           = CommonUtil.getKoreanName(CommonUtil.selectMarketName(listData[j]));                   // 비트코인
                             market["english_name"]          = CommonUtil.getMarketName(listData[j]);     // BTC/KRW
                             market["balance"]               = listData[j]["balance"];
                             market["locked"]                = listData[j]["locked"];
                             market["avg_buy_price"]         = listData[j]["avg_buy_price"];
+                            market["coin_name"]             = listData[j]["currency"];
+                            market["low_price"]             = 0;
+                            market["opening_price"]         = 0;
+                            market["high_price"]            = 0;
+                            market["trade_price"]           = 0;
+                            market["prev_closing_price"]    = 0;
                             marketData[market["market"]]    = market;
                             existAssets.push(market);
                             break;
                         }
                     }
-
+                    
                     if(!alreadyCoin){
                         market = new Object();
                         market["isAssetsCoin"]          = false;
@@ -224,6 +239,12 @@ function tradeAssets(request) {
                         market["balance"]               = 0;
                         market["locked"]                = 0;
                         market["avg_buy_price"]         = 0;
+                        market["low_price"]             = 0;
+                        market["opening_price"]         = 0;
+                        market["high_price"]            = 0;
+                        market["trade_price"]           = 0;
+                        market["prev_closing_price"]    = 0;
+                        market["coin_name"]             = targetCoin.coin_name;
                         marketData[market["market"]]    = market;
                     }
                 }
@@ -231,8 +252,8 @@ function tradeAssets(request) {
                     let request = new Object();
                     request["marketStr"] = CommonUtil.getMarketArrayName(existAssets, returnString);
                     getTicker(request).then(function(data){
+                        logWrite("[tradeAssets][getTicker] - Success");
                         let tickers = data;
-                        console.log(tickers);
                         for(let i in tickers){
                             marketData[tickers[i].market]["low_price"]          = tickers[i].low_price;
                             marketData[tickers[i].market]["opening_price"]      = tickers[i].opening_price;

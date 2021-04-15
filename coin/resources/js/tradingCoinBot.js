@@ -13,8 +13,8 @@ function tradingCoinBot(){
             }
         }
         
-        logWrite("existAssets", existAssets);
-        logWrite("notExistAssets", notExistAssets);
+        // logWrite("existAssets", existAssets);
+        // logWrite("notExistAssets", notExistAssets);
         /* 미보유 매수 */
         notExistAssetsBuy(notExistAssets);
         /* 평균 단가 기준 수익률 기준 +10% 이상 매도 && 평균 단가 기준 수익률 기준 -5% 이하 매수 */
@@ -31,10 +31,9 @@ function lowAndHighAssets(existAssets){
     let waitAssets = new Array();
     let price,prevPrice;
     for(let i in existAssets) {
-        price = CommonUtil.getAssetsYield(existAssets[i]);
-        prevPrice = CommonUtil.getPrevAssetsYield(existAssets[i]);
-        // logWrite(existAssets[i].market +", price : " + price +", prevPrice : " + prevPrice);
-        if(price >= 10 || (prevPrice >= 15 && price >= 8)){/* 수익률 10% 이상 or 전일 대비 15이상 and 수익률 8% 이상 */
+        price = CommonUtil.getAssetsYield(existAssets[i]);  // 수익률
+        prevPrice = CommonUtil.getPrevAssetsYield(existAssets[i]); // 전일 수익률
+        if(price >= 10 || (prevPrice >= 15 && price >= 8)){ /* 수익률 10% 이상 or 전일 대비 15이상 and 수익률 8% 이상 */
             highAssets.push(existAssets[i]);
         } else if(price <= -8 || prevPrice <= -10){ /* 전일 대비 -8%이하 and 진입가 대비 10%마다 1회 and 수익률 -10%이하 */
             lowAssets.push(existAssets[i]);
@@ -42,7 +41,7 @@ function lowAndHighAssets(existAssets){
             waitAssets.push(existAssets[i]);
         }
     }
-    /* 수익률 10% 이상 or 전일 대비 15이상 and 수익률 8% 이상 매도 */
+    /* 수익률 10% 이상 or 전일 대비 15% 이상 and 수익률 8% 이상 매도 */
     highAssetsSell(highAssets);
     /* 전일 대비 -8%이하 and 진입가 대비 10%마다 1회 and 수익률 -10% 이하 매수 */
     lowAssetsBuy(lowAssets);
@@ -105,8 +104,6 @@ function orderTarget(marketData, type){
     orderData["price"] = (type == 0) ? buyPrice : null;
     orderData["ord_type"] = (type == 0) ? "price" : "market";
     orderData["identifier"] = $Global["uniqueTicket"];
-    
-     
     logWrite("[orderTarget] - " + (((type == 0) ? "<span class='log_buy'>매수</span>" : "<span class='log_sell'>매도</span>")) + " " + marketName + ", 수익률" + CommonUtil.getAssetsYield(marketData) + ", 전일 대비 수익률 : " + CommonUtil.getPrevAssetsYield(marketData));
     // orderMarket(orderData);
 } 
@@ -121,40 +118,4 @@ function orderMarket(orderData){
     // }).catch(function(err) {
     //     logWrite("[orderMarket][postOrders] - 시장가 매수 매도 API 오류 발생", err);
     // });
-}
-
-/* 주문 리스트 가져오기 */
-function initOrders(market){
-    let orderData = new Object();
-    if(market != undefined) {
-        orderData["market"] = CommonUtil.getMarketName(market);
-    }
-    orderData["state"] = "wait";
-
-    let request = new Object();
-    request["callUrl"] = requestUrl.orders + "?" + $.param(orderData);
-    request["queryString"] = orderData;
-
-    logWrite("[initOrders] - 주문 리스트 가져오기 데이터", request);
-    getOrders(request).then(function(data){
-        logWrite("[initOrders][getOrders] - 주문 리스트 가져오기", data);
-    }).catch(function(err) {
-        logWrite("[initOrders][getOrders] - 주문 리스트 가져오기 오류 발생", err);
-    });
-}
-
-/* 주문 취소하기 */
-function deleteOrders(uuid){
-    let orderData = new Object();
-    orderData["uuid"] = uuid;
-
-    let request = new Object();
-    request["queryString"] = orderData;
-    
-    logWrite("[deleteOrders] - 주문 취소하기 데이터", request);
-    deleteOrder(request).then(function(data){
-        logWrite("[deleteOrders][deleteOrder] - 주문 취소하기", data);
-    }).catch(function(err) {
-        logWrite("[deleteOrders][deleteOrder] - 주문 취소하기 오류 발생", err);
-    });
 }

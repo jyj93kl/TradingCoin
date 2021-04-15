@@ -12,13 +12,16 @@ const CommonUtil = {
         sc.getSocket().emit(url, JSON.stringify(request));
     },
     getYield : function(nowMarket,assets){
-        return new Number( ( (assets.balance * nowMarket.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
+        let yield = new Number( ( (assets.balance * nowMarket.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2); 
+        return isNaN(yield) ? 0 : yield;
     },
     getAssetsYield : function(assets){  // 현재 수익률
-        return new Number( ( (assets.balance * assets.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
+        let yield = new Number( ( (assets.balance * assets.trade_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
+        return isNaN(yield) ? 0 : yield;
     },
     getPrevAssetsYield : function(assets){  // 전일 대비 수익률
-        return new Number( ( (assets.balance * assets.prev_closing_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2);  
+        let yield = new Number( ( (assets.balance * assets.prev_closing_price) / (assets.balance * assets.avg_buy_price) ) * 100 - 100 ).toFixed(2); 
+        return isNaN(yield) ? 0 : yield;
     }, 
     getMarketName : function(nowMarket){
         return nowMarket.market ? nowMarket.market : nowMarket.currency + "/" + nowMarket.unit_currency;

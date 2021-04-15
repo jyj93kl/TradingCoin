@@ -1,12 +1,3 @@
-const sharedObject = {
-    selectMarkets : "upbit/markets",
-    selectMarket : "upbit/market",
-    accounts : "accounts",
-    uuidv4 : "uuidv4",
-    marketOrders : "upbit/coin/orders",
-    marketOrder : "upbit/coin/order",
-}
-
 const serverMessage = {
     holdAssets      : "upbit/holdAssets",
     orders          : "upbit/orders",
@@ -19,7 +10,6 @@ const serverMessage = {
 }
 
 module.exports = {
-    sharedObject : sharedObject,
     serverMessage : serverMessage
 }
 

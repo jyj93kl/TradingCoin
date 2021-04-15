@@ -21,7 +21,9 @@ const market = [
     {"market_warning":"NONE","market":"KRW-BORA",   "korean_name":"보라",           "english_name":"BORA",          "coin_name":"BORA"      ,   "code_name" : "BORA/KRW"    },
     {"market_warning":"NONE","market":"KRW-PCI",    "korean_name":"페이코인",       "english_name":"PayCoin",       "coin_name":"PCI"       ,   "code_name" : "PCI/KRW"     },
     {"market_warning":"NONE","market":"KRW-PUNDIX", "korean_name":"펀디엑스",       "english_name":"Pundi X",       "coin_name":"PUNDIX"    ,   "code_name" : "PUNDIX/KRW"  },
-    {"market_warning":"NONE","market":"KRW-TT",     "korean_name":"썬더토큰",       "english_name":"Thunder Token", "coin_name":"TT"        ,   "code_name" : "TT/KRW"      }
+    {"market_warning":"NONE","market":"KRW-TT",     "korean_name":"썬더토큰",       "english_name":"Thunder Token", "coin_name":"TT"        ,   "code_name" : "TT/KRW"      },
+    {"market_warning":"NONE","market":"KRW-BTC",    "korean_name":"비트코인",       "english_name":"Bitcoin",       "coin_name":"BTC"       ,   "code_name" : "BTC/KRW"     },
+    {"market_warning":"NONE","market":"KRW-ETH",    "korean_name":"이더리움",       "english_name":"Ethereum",      "coin_name":"ETH"       ,   "code_name" : "ETH/KRW"     }
     // ,{"market_warning":"NONE","market":"KRW-BCH",    "korean_name":"비트코인캐시",   "english_name":"Bitcoin Cash",  "coin_name":"BCH"       ,   "code_name" : "BCH/KRW"     } 
 ]
 
