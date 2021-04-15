@@ -15,38 +15,6 @@
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <style>
-      * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  font-family: "Montserrat", sans-serif;
-  text-rendering: optimizeLegibility;
-  background: #fcfcfc;
-}
-
-.main-container-wrapper {
-  background-color: #F8FAFA;
-  min-width: 320px;
-  min-height: 568px;
-  max-width: 414px;
-  overflow-y: auto;
-}
-@media (min-width: 415px) {
-  .main-container-wrapper {
-    -moz-box-shadow: 0px 32px 47px rgba(32, 23, 23, 0.09);
-    -webkit-box-shadow: 0px 32px 47px rgba(32, 23, 23, 0.09);
-    box-shadow: 0px 32px 47px rgba(32, 23, 23, 0.09);
-    margin: 24px auto;
-  }
-}
 
 header {
   background-color: #fff;
@@ -55,6 +23,8 @@ header {
   justify-content: space-between;
   overflow: hidden;
   position: relative;
+
+  display: none;
 }
 
 .header__btn {
@@ -91,13 +61,14 @@ header {
 }
 
 .calendar-container {
-  background-color: #fff;
-  padding: 16px;
+  margin: 0 2% 4%;
   margin-bottom: 24px;
+  padding: 0 2% 0;
 }
 .calendar-container__header {
   display: flex;
   justify-content: space-between;
+  padding: 0 8px 8px;
 }
 .calendar-container__btn {
   background: transparent;
@@ -112,19 +83,19 @@ header {
   transition: all 0.3s ease-in;
 }
 .calendar-container__title {
-  color: #222741;
-  font-size: 20px;
-  font-weight: 700;
+  color: #f2f6f8;
+  font-size: 30px;
+  font-weight: 900;
 }
 
 .calendar-table {
   margin-top: 12px;
   width: 100%;
+  border: 1px solid #f2f6f8;
 }
 .calendar-table__item {
   border: 2px solid transparent;
   border-radius: 50%;
-  color: #424588;
   font-size: 12px;
   font-weight: 700;
   width: 100%;
@@ -133,114 +104,62 @@ header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  padding-top: 50%;
+  height: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 47% 0;
 }
 .calendar-table__item:hover {
   background: #f8fafa;
   -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 2px 2px rgb(0 0 0 / 10%);
+  box-shadow: 0px 2px 2px rgb(0 0 0 / 10%);
   transition: 0.2s all ease-in;
+  color: #28334a;
+}
+.calendar-table__body {
+    padding: 15px 0;
 }
 .calendar-table__row {
   display: flex;
   justify-content: center;
 }
 .calendar-table__header {
-  border-bottom: 2px solid #F2F6F8;
-  margin-bottom: 4px;
+  border-bottom: 1px solid #F2F6F8;
+  background-color: #f2f6f8;
 }
 .calendar-table__header .calendar-table__col {
   display: inline-block;
-  color: #99A4AE;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 12px 3px;
-  text-align: center;
-  text-transform: uppercase;
-  width: 40px;
-  height: 38px;
-}
-@media (min-width: 360px) {
-  .calendar-table__header .calendar-table__col {
-    width: 46px;
-  }
-}
-@media (min-width: 410px) {
-  .calendar-table__header .calendar-table__col {
-    width: 54px;
-  }
+    color: #99A4AE;
+    font-weight: 700;
+    padding: 16px 3px;
+    text-align: center;
+    text-transform: uppercase;
+    width: calc(100% / 7);
 }
 .calendar-table__body .calendar-table__col {
-  width: 40px;
-  height: 42px;
-  padding-bottom: 2px;
+  width: calc(100% / 7);
+  height: auto;
+  padding-bottom: 2px;;
 }
-@media (min-width: 360px) {
-  .calendar-table__body .calendar-table__col {
-    width: 46px;
-    height: 48px;
-  }
-}
-@media (min-width: 410px) {
-  .calendar-table__body .calendar-table__col {
-    width: 54px;
-    height: 56px;
-  }
-}
+
 .calendar-table__today .calendar-table__item {
-  border-color: #FEFEFE;
-  background-color: #F2F6F8;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+  color: var(--color-primary);
+  font-weight: 900;
+  font-size: 22px;
 }
-.calendar-table__event .calendar-table__item {
-  background-color: #66DCEC;
-  border-color: #FEFEFE;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  color: #fff;
-}
-.calendar-table__event--long {
-  overflow-x: hidden;
-}
-.calendar-table__event--long .calendar-table__item {
-  border-radius: 0;
-  border-width: 2px 0;
-}
-.calendar-table__event--start .calendar-table__item {
-  border-left: 2px solid #fff;
-  border-radius: 50% 0 0 50%;
-}
-.calendar-table__event--start.calendar-table__col:last-child .calendar-table__item {
-  border-width: 2px;
-}
-.calendar-table__event--end .calendar-table__item {
-  border-right: 2px solid #fff;
-  border-radius: 0 50% 50% 0;
-}
-.calendar-table__event--end.calendar-table__col:first-child .calendar-table__item {
-  border-width: 2px;
-}
+
 .calendar-table__inactive .calendar-table__item {
-  color: #DCDCE3;
-  cursor: default;
+  color: var(--color-gray);
+    cursor: default;
 }
 .calendar-table__inactive .calendar-table__item:hover {
   background: transparent;
   box-shadow: none;
 }
-.calendar-table__inactive.calendar-table__event .calendar-table__item {
-  color: #fff;
-  opacity: 0.25;
-}
-.calendar-table__inactive.calendar-table__event .calendar-table__item:hover {
-  background: #66DCEC;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-}
+
 
 .events-container {
   padding: 0 15px;
@@ -299,10 +218,26 @@ header {
   color: #9FAAB7;
   display: inline-block;
 }
+
+.daily-volumn_plus {
+  color: #ff0000;
+}
+.daily-volumn_minus {
+  color: blue;
+}
   </style>
 </head>
 <body>
 	<div id="moblie_wrap">
+    <section>
+			<h2 class="page-title">
+				<a href="javascript:void(0)" id="writeDiary"><i class="fas fa-pen-nib"></i></a>
+				Daily
+				<a href="javascript:void(0)" id="settings"><i class="fas fa-pen-square"></i></a>
+			</h2>
+		</section>
+
+
   <div class="main-container-wrapper">
     <header>
       <button class="header__btn header__btn--left" title="Menu">
@@ -347,7 +282,7 @@ header {
                     <span>30</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__today">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>1</span>
                   </div>
@@ -365,23 +300,27 @@ header {
                 <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>4</span>
+                    <p class="daily-volumn_minus">- 12,510</p>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>5</span>
+                    <p class="daily-volumn_plus">+ 2,130</p>
                   </div>
                 </div>
                 <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>6</span>
+                    <p class="daily-volumn_plus">+ 2,130</p>
                   </div>
                 </div>
               </div>
               <div class="calendar-table__row">
-                <div class="calendar-table__col calendar-table__event">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>7</span>
+                    <p class="daily-volumn_plus">+ 2,130</p>
                   </div>
                 </div>
                 <div class="calendar-table__col">
@@ -389,7 +328,7 @@ header {
                     <span>8</span>
                   </div>
                 </div>
-                <div class="calendar-table__col">
+                <div class="calendar-table__col calendar-table__today">
                   <div class="calendar-table__item">
                     <span>9</span>
                   </div>
@@ -426,17 +365,17 @@ header {
                     <span>15</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event calendar-table__event--long calendar-table__event--start">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>16</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event calendar-table__event--long">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>17</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event calendar-table__event--long calendar-table__event--end">
+                <div class="calendar-table__col ">
                   <div class="calendar-table__item">
                     <span>18</span>
                   </div>
@@ -483,14 +422,14 @@ header {
                     <span>26</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event calendar-table__event--long calendar-table__event--start">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>27</span>
                   </div>
                 </div>
               </div>
               <div class="calendar-table__row">
-                <div class="calendar-table__col calendar-table__event calendar-table__event--long calendar-table__event--end">
+                <div class="calendar-table__col">
                   <div class="calendar-table__item">
                     <span>28</span>
                   </div>
@@ -510,7 +449,7 @@ header {
                     <span>31</span>
                   </div>
                 </div>
-                <div class="calendar-table__col calendar-table__event calendar-table__inactive">
+                <div class="calendar-table__col calendar-table__inactive">
                   <div class="calendar-table__item">
                     <span>1</span>
                   </div>
