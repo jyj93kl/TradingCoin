@@ -67,10 +67,12 @@ io.sockets.on('connection', function (socket) { // connection이 발생할 때 �
 	socket.on(serverMessage.ticker, function(data){
 		sendResponse(socket, serverMessage.ticker, data);
 	});
+	socket.on(serverMessage.dayCandle, function(data){
+		sendResponse(socket, serverMessage.dayCandle, data);
+	});
 	socket.on(serverMessage.uuidv4, function(data){
 		socket.emit(serverMessage.uuidv4, uuid.v4());
 	});
-
 	// socket 통신 종료 후  DBConnection end
 	socket.on('disconnect', function () {
 		console.log('user disconnected');

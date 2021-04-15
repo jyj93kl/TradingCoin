@@ -6,20 +6,23 @@ const requestUrl = {
     orderChance : "https://api.upbit.com/v1/order/chance",
     marketAll : "https://api.upbit.com/v1/market/all",
     ticker : "https://api.upbit.com/v1/ticker?markets=",
+    dayCandles : "https://api.upbit.com/v1/candles/days?market="
+    // ticker : "https://api.upbit.com/v1/candles/minutes/5?market=KRW-BTC&count=3",
+    // 'https://api.upbit.com/v1/candles/days?count=1'
 }
 
-
 const market = [
-    {"market_warning":"NONE","market":"KRW-STORJ","korean_name":"스토리지","english_name":"Storj","coin_name":"STORJ"},
-    {"market_warning":"NONE","market":"KRW-DMT","korean_name":"디마켓","english_name":"DMarket","coin_name":"DMT"},
-    {"market_warning":"NONE","market":"KRW-CHZ","korean_name":"칠리즈","english_name":"Chiliz","coin_name":"CHZ"},
-    {"market_warning":"NONE","market":"KRW-PLA","korean_name":"플레이댑","english_name":"PlayDapp","coin_name":"PLA"},
-    {"market_warning":"NONE","market":"KRW-OMG","korean_name":"오미세고","english_name":"OmiseGo","coin_name":"OMG"},
-    {"market_warning":"NONE","market":"KRW-TRX","korean_name":"트론","english_name":"TRON","coin_name":"TRX"},
-    {"market_warning":"NONE","market":"KRW-BORA","korean_name":"보라","english_name":"BORA","coin_name":"BORA"},
-    {"market_warning":"NONE","market":"KRW-PCI","korean_name":"페이코인","english_name":"PayCoin","coin_name":"PCI"},
-    {"market_warning":"NONE","market":"KRW-PUNDIX","korean_name":"펀디엑스","english_name":"Pundi X","coin_name":"PUNDIX"},
-    {"market_warning":"NONE","market":"KRW-TT","korean_name":"썬더토큰","english_name":"Thunder Token","coin_name":"TT"}
+    {"market_warning":"NONE","market":"KRW-STORJ",  "korean_name":"스토리지",       "english_name":"Storj",         "coin_name":"STORJ"     ,   "code_name" : "STORJ/KRW"   },
+    {"market_warning":"NONE","market":"KRW-DMT",    "korean_name":"디마켓",         "english_name":"DMarket",       "coin_name":"DMT"       ,   "code_name" : "DMT/KRW"     },
+    {"market_warning":"NONE","market":"KRW-CHZ",    "korean_name":"칠리즈",         "english_name":"Chiliz",        "coin_name":"CHZ"       ,   "code_name" : "CHZ/KRW"     },
+    {"market_warning":"NONE","market":"KRW-PLA",    "korean_name":"플레이댑",       "english_name":"PlayDapp",      "coin_name":"PLA"       ,   "code_name" : "PLA/KRW"     },
+    {"market_warning":"NONE","market":"KRW-OMG",    "korean_name":"오미세고",       "english_name":"OmiseGo",       "coin_name":"OMG"       ,   "code_name" : "OMG/KRW"     },
+    {"market_warning":"NONE","market":"KRW-TRX",    "korean_name":"트론",           "english_name":"TRON",          "coin_name":"TRX"       ,   "code_name" : "TRX/KRW"     },
+    {"market_warning":"NONE","market":"KRW-BORA",   "korean_name":"보라",           "english_name":"BORA",          "coin_name":"BORA"      ,   "code_name" : "BORA/KRW"    },
+    {"market_warning":"NONE","market":"KRW-PCI",    "korean_name":"페이코인",       "english_name":"PayCoin",       "coin_name":"PCI"       ,   "code_name" : "PCI/KRW"     },
+    {"market_warning":"NONE","market":"KRW-PUNDIX", "korean_name":"펀디엑스",       "english_name":"Pundi X",       "coin_name":"PUNDIX"    ,   "code_name" : "PUNDIX/KRW"  },
+    {"market_warning":"NONE","market":"KRW-TT",     "korean_name":"썬더토큰",       "english_name":"Thunder Token", "coin_name":"TT"        ,   "code_name" : "TT/KRW"      }
+    // ,{"market_warning":"NONE","market":"KRW-BCH",    "korean_name":"비트코인캐시",   "english_name":"Bitcoin Cash",  "coin_name":"BCH"       ,   "code_name" : "BCH/KRW"     } 
 ]
 
 const buyPrice = 6000;
@@ -28,7 +31,11 @@ const lowPercent = -5;
 const addPurchasePercent = 7;
 const marketBuy = 0;
 const marketSell = 1;
+const returnArray = true;
+const returnString = false;
+const sellingPercent = 80;
 const enter = "\n";
+
 // const market = [
 // 	{"market_warning":"NONE","market":"KRW-BTC","korean_name":"비트코인","english_name":"Bitcoin"},
 // 	{"market_warning":"NONE","market":"KRW-ETH","korean_name":"이더리움","english_name":"Ethereum"},
