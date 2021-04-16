@@ -60,7 +60,24 @@ function initAssets(){
         let $cryptos = document.getElementById("cryptos");
         /* 로그 작업 */
         logWrite("[initAssets][tradeAssets] - 보유 자산 조회");
-        for(key in listData) {
+        let assetsKrw = 0;                                              // 보유 KRW
+        let totalSum = 0;                                               // 총 보유 자산
+        let totalPrice = 0;                                             // 총 매수 금액
+        let totalBenefitPrice = 0;                                      // 총 평가 금액
+        let totalBenefit = 0;                                           // 총 평가 손익
+        let totalYield = 0;                                             // 총 평가 수익률
+        let balance,avg_buy_price,trade_price,market;
+        for(key in listData) {0
+            market = listData[key], balance = new Number(market.balance), avg_buy_price = new Number(market.avg_buy_price), trade_price = new Number(market.trade_price);
+            if(market.market == "KRW-KRW"){
+                assetsKrw += balance;
+                continue;
+            }
+            if(!market.isAssetsCoin) continue;
+
+            totalPrice += balance * avg_buy_price;                      // 기존 총 매수 금액 + 해당 코인의 보유 수량 * 평균 단가
+            totalBenefitPrice += balance * trade_price                  // 기존 총 평가 금액 + 해당 코인의  보유 수량 * 현재가
+
             logWrite( "[initAssets][tradeAssets] - "+
             "코인 : "           + listData[key]["english_name"]                 +
             ", 시가 : "         + listData[key]["opening_price"]               + 
@@ -70,6 +87,17 @@ function initAssets(){
             ", 수익률 : "       + CommonUtil.getAssetsYield(listData[key]) )
         }
 
+        totalBenefit = totalBenefitPrice - totalPrice;                  // 총 평가 금액 - 총 매수 금액
+        totalYield = ((totalBenefitPrice / totalPrice) * 100) - 100;    // ((총 평가 금액 / 총 매수 금액) * 100) - 100
+        totalSum = assetsKrw + totalBenefitPrice;                       // 보유 KRW + 총 평가 금액
+
+        logWrite("보유 KRW :" + Math.round(assetsKrw).toLocaleString());
+        logWrite("총 보유 자산 :" + Math.round(totalSum).toLocaleString());
+        logWrite("총 매수 금액 :" + Math.round(totalPrice).toLocaleString());
+        logWrite("총 평가 금액 :" + Math.round(totalBenefitPrice).toLocaleString());
+        logWrite("총 평가 손익 :" + Math.round(totalBenefit).toLocaleString());
+        logWrite("총 평가 수익률 :" + new Number(totalYield).toFixed(2));
+        
         /* 화면 초기화 */
         document.getElementById("cryptos").innerHTML = ""
         /* 화면 드로잉 */
@@ -269,3 +297,4 @@ function deleteOrders(uuid){
         logWrite("[deleteOrders][deleteOrder] - 주문 취소하기 오류 발생", err);
     });
 }
+

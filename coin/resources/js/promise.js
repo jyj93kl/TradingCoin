@@ -166,11 +166,16 @@ function getParamMarket() {
     "isAssetsCoin"      : 보유 여부 true : false,
     "market"            : "KRW-BTC"
     "korean_name"       : "비트코인" 
-    "english_name"      : "BTC/KRW"
+    "english_name"      : "BTC/KRW" 
     "balance"           : 보유 수량
     "locked"            : 주문 중 묶여있는 금액/수량
     "avg_buy_price"     : 평균 단가
     "coin_name"         : "BTC"
+    "low_price"         : "저가"
+    "opening_price"     : "시가"
+    "high_price"        : "고가"
+    "trade_price"       : "현재가"
+    "prev_closing_price": "전일종가"
 */
 function tradeAssets(request) {
     return new Promise(function(resolve, reject) {
