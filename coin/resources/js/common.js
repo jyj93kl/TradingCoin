@@ -55,6 +55,13 @@ const CommonUtil = {
             case "KRW-GRT"       : return "그래프";
             case "KRW-KRW"       : return "원화";
             case "KRW-ETH"       : return "이더리움";
+            case "KRW-RFR"       : return "리퍼리움";
+            case "KRW-SNT"       : return "스테이터스네트워크토큰";
+            case "KRW-DOGE"      : return "도지";
+            case "KRW-XRP"       : return "리플";
+            case "KRW-BTT"       : return "비트토렌트";
+            case "KRW-STRK"      : return "스트라이크";
+            
             default              : return null;
         }
     },
