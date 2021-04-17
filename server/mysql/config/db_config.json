@@ -1,0 +1,7 @@
+{   
+  "host": "nodejs-008.cafe24.com", 
+  "user": "yjjeong",   
+  "password": "mobot123!",
+  "database": "yjjeong",
+  "port"	: 3306
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="market">  
+
+ <select id="selectAssetsMarketUsedTrade">
+    select	m.market_id,
+            m.market,
+            m.market_ui,
+            m.name_korea,
+            m.name_english,
+            type,
+            t.balance,
+            t.avg_buy_price,
+            IF(t.trade_id != 0, 'Y', 'N') as trade_flag
+    from mt_market m 
+    left join mt_market_trade t on m.market_id = t.market_id
+    where type = 'KRW'
+    order by trade_flag desc
+  </select>
+
+  <select id="selectAssetsMarket">
+    select * 
+    from  mt_market m, 
+          mt_market_trade t
+    where m.market_id = t.market_id
+  </select>
+
+  <select id="selectMarkets">
+    select * from mt_market 
+    <if test="type != null">
+    where type = #{type}
+    </if>
+  </select>
+
+  <select id="selectMarketTrades">
+    select * from mt_market_trade 
+  </select>
+
+  <insert id="insertMarketTrade">
+    insert into mt_market_trade (market_id, status, balance, avg_buy_price) values (#{market_id}, #{status}, #{balance}, #{avg_buy_price})
+  </insert>
+
+  <update id="updateMarketTrade">
+    update mt_market_trade set status = #{status}
+    where market_id = #{market_id}
+  </update>
+
+  <delete id="deleteMarketTrade">
+    delete from mt_market_trade where trade_id = #{trade_id}
+  </delete>
+
+
+</mapper>

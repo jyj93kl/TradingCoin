@@ -1,14 +1,14 @@
 const { Console } = require('console');
-var express = require('express')
+let express = require('express')
   , http = require('http')
   , path = require('path');
 
-var app = express();
-var router = require('./routes/index.js')(app);
-var fs = require('fs');
+let app = express();
+let router = require('./routes/router.js')(app);
+let fs = require('fs');
 
 // express 서버 실행
-var server = app.listen(3000, function () {
+let server = app.listen(3000, function () {
     console.log("Express server has started on port 3000");
 });
 
@@ -28,176 +28,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+////////////////////////// 소켓 설정 /////////////////////
 
-//////////////////////////소켓, DB 데이터전송/////////////////////
+let io = require('socket.io').listen(server);
 
-var io = require('socket.io').listen(server);
-
-//////////////////////////////////////////////////////////////
-
-var request = require('request');
-let sharedObject = require("./coin/resources/modules/sharedObject.js").sharedObject;
-let serverMessage = require("./coin/resources/modules/sharedObject.js").serverMessage;
-let key = require("./storage/key.js");
-let uuid = require("uuid");
+let mobot_socket = require('./server/socket/mobot_socket')
+mobot_socket.initialize(io);
 
 //////////////////////////////////////////////////////////////
-  
-io.sockets.on('connection', function (socket) { // connection이 발생할 때 핸들러를 실행합니다.
-	// console.log("socket on", socket);
-	// console.log("socket on");
-	socket.on("testCall", function(data){ socket.emit("testCall", "testCall")});
-
-	/* requestMapping */
-	socket.on(serverMessage.holdAssets, function(data){
-		sendResponse(socket, serverMessage.holdAssets, data);
-	});
-	socket.on(serverMessage.orders, function(data){
-		sendResponse(socket, serverMessage.orders, data);
-	});
-	socket.on(serverMessage.order, function(data){
-		sendResponse(socket, serverMessage.order, data);
-	});
-	socket.on(serverMessage.orderChance, function(data){
-		sendResponse(socket, serverMessage.orderChance, data);
-	});
-	socket.on(serverMessage.marketAll, function(data){
-		sendResponse(socket, serverMessage.marketAll, data);
-	});
-	socket.on(serverMessage.ticker, function(data){
-		sendResponse(socket, serverMessage.ticker, data);
-	});
-	socket.on(serverMessage.dayCandle, function(data){
-		sendResponse(socket, serverMessage.dayCandle, data);
-	});
-	socket.on(serverMessage.uuidv4, function(data){
-		socket.emit(serverMessage.uuidv4, uuid.v4());
-	});
-	// socket 통신 종료 후  DBConnection end
-	socket.on('disconnect', function () {
-		console.log('user disconnected');
-	});
-});
-
-let sendResponse = function(socket, message, data){
-	// let request = JSON.parse(data);
-	callMethod(socket, message, JSON.parse(data));
-	// if(request.method == "GET"){
-	// 	getMethod(socket, message, request);
-	// } else if(request.method == "DELETE"){
-	// 	deleteMethod(socket, message, request);
-	// } else {
-	// 	postMethod(socket, message, request);
-	// }
-}
-
-async function callMethod(socket, message, requestData){
-	console.log("method : " + requestData.method + " - " + requestData.callUrl);
-	let sendCall = {
-		method : requestData.method,
-		url : requestData.callUrl,
-		headers: {
-			Authorization: key.createToken(requestData)
-		}
-	}
-	if(requestData.queryString){
-		sendCall["json"] = requestData.queryString;
-	}
-	// console.log(sendCall);
-	await request(sendCall, function (err, res, result) {
-		if(res.statusCode == 200){
-			// console.log("code : " + res.statusCode + ", get request result success", result);
-			socket.emit(message, socketCallback(1, result));
-		} else {
-			// console.log("code : " + res.statusCode + ", get request result fail", result);
-			socket.emit(message, socketCallback(-1, result));
-		}
-	});
-}
-
-async function getMethod(socket, message, requestData){
-	let sendCall = {
-		method : "GET",
-		url : requestData.callUrl,
-		headers: {
-			Authorization: key.createToken(requestData)
-		}
-	}
-	if(requestData.queryString){
-		sendCall["json"] = requestData.queryString;
-	}
-	// console.log(sendCall);
-	await request(sendCall, function (err, res, result) {
-		if(res.statusCode == 200){
-			// console.log("code : " + res.statusCode + ", get request result success", result);
-			socket.emit(message, socketCallback(1, result));
-		} else {
-			// console.log("code : " + res.statusCode + ", get request result fail", result);
-			socket.emit(message, socketCallback(-1, result));
-		}
-	});
-}
-
-async function postMethod(socket, message, requestData){
-	let sendCall = {
-		method : "POST",
-		url : requestData.callUrl,
-		headers: {
-			Authorization: key.createToken(requestData)
-		}
-	}
-	if(requestData.queryString){
-		sendCall["json"] = requestData.queryString;
-	}
-	// console.log(sendCall);
-	request(sendCall, function (err, res, result) {
-		if(res.statusCode == 200){
-			// console.log("code : " + res.statusCode + ", post request result success", result);
-			socket.emit(message, socketCallback(1, sendCall.url, result));
-		} else {
-			// console.log("code : " + res.statusCode + ", post request result fail", result);
-			socket.emit(message, socketCallback(-1, sendCall.url, result));
-		}
-	});
-}
-
-async function deleteMethod(socket, message, requestData){
-	let sendCall = {
-		method : "DELETE",
-		url : requestData.callUrl,
-		headers: {
-			Authorization: key.createToken(requestData)
-		}
-	}
-	if(requestData.queryString){
-		sendCall["json"] = requestData.queryString;
-	}
-	// console.log(sendCall);
-	await request(sendCall, function (err, res, result) {
-		if(res.statusCode == 200){
-			// console.log("code : " + res.statusCode + ", get request result success", result);
-			socket.emit(message, socketCallback(1, result));
-		} else {
-			// console.log("code : " + res.statusCode + ", get request result fail", result);
-			socket.emit(message, socketCallback(-1, result));
-		}
-	});
-}
-
-
-let socketCallback = function(result, data){
-	return JSON.stringify({ result : result, data : data })
-}
-
-// function testCall(callback) {
-// 	var OPTIONS = {
-// 		headers: {'Content-Type': 'application/json'},
-// 		url: null,
-// 		body: null
-// 	};
-// 	OPTIONS.url = upbit.selectMarkets;
-// 	// request.setHeader("Content-Type", "application/json");
-// 	request.get(OPTIONS, function (err, res, result) {
-// 		statusCodeErrorHandler(res.statusCode, result, callback);
-// 	});
-// }

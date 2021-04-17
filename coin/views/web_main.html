@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+	<meta http-equiv="Cache-Control" content="no-cache"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta http-equiv="Pragma" content="no-cache"/>
+	<title>TradingCoin</title>
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="../resources/css/web_main.css" />
+	<link type="text/css" rel="stylesheet" href="../resources/css/style.css" />
+	<!-- 플러그인 선언-->
+	<link type="text/css" rel="stylesheet" href="../resources/plugins/apexcharts/apexcharts.css" />
+</head>
+
+<body>
+	<div class="cotainer">
+		<div class="header">
+			<div class="menu">
+				<a class="" title="지갑" href="/wallet">Wallet</a>
+				<a class="" title="주문 리스트" href="/#">Orders</a>
+				<a class="" title="거래 내역" href="/#">Trading</a>
+			</div>
+		</div>
+		
+		<div class="content">
+			<div class="content-wrapper assets-wrapper ">
+				<div class="assets-content card" style="overflow: hidden;margin-bottom: 4px;">
+					<!-- <h4 class="section-title">My Assets 영역</h4> -->
+					<div class="my-assets">
+						<div class="ammount">
+							<div class="ammount-total">
+								<div class="ammount-attr">
+									<span class="ammount-title">보유 원화</span>
+									<span id="assetsKrw" class="ammount-value">100000000 <i>KRW</i></span>
+								</div>
+								<div class="ammount-attr">
+									<span class="ammount-title">총 보유 자산</span>
+									<span id="totalSum" class="ammount-value">100000000 <i>KRW</i></span>
+								</div>
+							</div>
+							<div class="ammount-total">
+								<div class="ammount-attr">
+									<span class="ammount-title">총 매수 금액</span>
+									<span id="totalPrice" class="ammount-value">100000000 <i>KRW</i></span>
+								</div>
+								<div class="ammount-attr">
+									<span class="ammount-title">총 평가 금액</span>
+									<span id="totalBenefitPrice" class="ammount-value">100000000 <i>KRW</i></span>
+								</div>
+							</div>
+							<div class="ammount-total">
+								<div class="ammount-attr">
+									<span class="ammount-title">총 평가 손익</span>
+									<span id="totalBenefit" class="ammount-value">100000000 <i>KRW</i></span>
+								</div>
+								<div class="ammount-attr">
+									<span class="ammount-title">총 평가 수익률</span>
+									<span id="totalYield" class="ammount-value">100000000 <i>%</i></span>
+								</div>
+							</div>
+						</div>
+						<div class="donut-chart">
+							<div id="myAssetsChart"></div>
+						</div>
+					</div>
+				</div>
+				<div class="assets-trade card">
+					<div class="trade-content">
+						<div class="table-thead">
+							<table>
+								<colgroup>
+									<col width="150px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+									<col width="150px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+								</colgroup>
+								<thead>
+									<tr>
+										<th>코인명</th>
+										<th>보유 수량</th>
+										<th>평균 단가</th>
+										<th>매수 금액</th>
+										<th>현재가</th>
+										<th>평가 금액</th>
+										<th>평가 손익</th>
+										<th>수익률</th>
+										<th>거래 상태</th>
+									</tr>
+								</thead>
+							</table>
+						</div> 
+						<div class="table-tbody highlight-table">
+							<table id="usedTradeTable">
+								<colgroup>
+									<col width="150px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+									<col width="150px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="80px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+									<col width="90px" style="background: #f9fafc" />
+								</colgroup>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="content-wrapper trade-wrapper">
+				<div class="trade-content">
+					<div class="table-thead">
+						<table>
+							<colgroup>
+								<col width="150px" style="background: #f9fafc" />
+								<col width="80px" style="background: #f9fafc" />
+								<col width="80px" style="background: #f9fafc" />
+								<col width="90px" style="background: #f9fafc" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th>코인명</th>
+									<th>현재가</th>
+									<th>전일대비</th>
+									<th>거래대금</th>
+								</tr>
+							</thead>
+						</table>
+					</div> 
+					<div class="table-tbody highlight-table">
+						<table id="tradeTable">
+							<colgroup>
+								<col width="150px" style="background: #f9fafc" />
+								<col width="80px" style="background: #f9fafc" />
+								<col width="80px" style="background: #f9fafc" />
+								<col width="90px" style="background: #f9fafc" />
+							</colgroup>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="scriptContainer" class="log_close">
+			<span class="log-toggle_button log_close">open/close</span>
+		</div>
+
+	</div>
+</body>
+<!-- 플러그인 선언-->
+<script type="text/javascript" src="../resources/plugins/jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../resources/plugins/websocket/sockjs.min.js"></script>
+<script type="text/javascript" src="../resources/plugins/require/require.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../resources/plugins/apexcharts/apexcharts.min.js"></script>
+<!-- 커스텀 스크립트 선언-->
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/param.js"></script>
+<script type="text/javascript" src="../resources/js/n_socket.js"></script>
+<script type="text/javascript" src="../resources/js/u_socket.js"></script>
+<script type="text/javascript" src="../resources/js/web_main.js"></script>
+<script type="text/javascript" src="../resources/js/promise.js"></script>
+<script type="text/javascript" src="../resources/js/tradingCoinBot.js"></script>
+</html>

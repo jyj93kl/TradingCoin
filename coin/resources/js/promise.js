@@ -46,7 +46,7 @@ function getOrders(request) {
     return new Promise(function(resolve, reject) {
         CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].orders, requestData, function(data) {
             let response = JSON.parse(data);
-            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(response.data);
         });
     });
 }
@@ -55,6 +55,10 @@ function postOrders(request) {
     let requestData = (request != undefined) ? request : new Object();
     requestData["callUrl"] = requestUrl.orders;
     requestData["type"] = 1;
+
+    throw '미쳤니 영재야 그만해';
+    
+    return false;
 
     return new Promise(function(resolve, reject) {
         CommonUtil.sendMessage(serverSocket, "POST", $Global["serverMessage"].orders, requestData, function(data) {
@@ -87,7 +91,7 @@ function deleteOrder(request) {
     return new Promise(function(resolve, reject) {
         CommonUtil.sendMessage(serverSocket, "DELETE", $Global["serverMessage"].order, requestData, function(data) {
             let response = JSON.parse(data);
-            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(response.data);
         });
     });
 }
@@ -268,18 +272,15 @@ function tradeAssets(request) {
                         }
                         resolve(marketData);
                     }).catch(function(err) {
-                        console.log(err);
                         logWrite("[tradeAssets][getTicker] - Error", err);
                     });
                 } else {
                     resolve(marketData);
                 }
             }).catch(function(err) { 
-                console.log(err);
                 logWrite("[tradeAssets][getParamMarket] - Error", err);
             });
         }).catch(function(err) {  
-            console.log(err);
             logWrite("[tradeAssets][getHoldAssets] - Error", err);
         });
     });

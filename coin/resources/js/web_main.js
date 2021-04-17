@@ -15,23 +15,16 @@ function initializeApplication(){
 
 function initializeComponent(){
     // logWrite("initializeComponent");
-    document.getElementsByClassName("log-toggle_button")[0].addEventListener("click", function(e) {
-        let $scriptContainer = document.getElementById("scriptContainer");
-        $scriptContainer.classList = ($scriptContainer.classList == "log_close") ? "" : "log_close";
-    })
+
+    createAssetsDonutChart();
 }
 
 function initializeBindEvent(){
     // logWrite("initializeComponent");
-    document.getElementById("selectBtn").addEventListener("click", function(e){
-        initAssets();
-    });
-    document.getElementById("classifyBtn").addEventListener("click", function(e){
-        tradingCoinBot();
-    });
-    document.getElementById("waitBtn").addEventListener("click", function(e){
-        initOrders();
-    });
+    document.getElementsByClassName("log-toggle_button")[0].addEventListener("click", function(e) {
+        let $scriptContainer = document.getElementById("scriptContainer");
+        $scriptContainer.classList = ($scriptContainer.classList == "log_close") ? "" : "log_close";
+    })
 }
 
 function initializeComponentData(){
@@ -39,7 +32,8 @@ function initializeComponentData(){
     bitSocket.initialize();
 
     initUidv4();
-    // initAssets();
+    initAssets();
+    // initMySQL();
 }
 
 function initUidv4(){
@@ -67,7 +61,7 @@ function initAssets(){
         let totalBenefit = 0;                                           // 총 평가 손익
         let totalYield = 0;                                             // 총 평가 수익률
         let balance,avg_buy_price,trade_price,market;
-        for(key in listData) {0
+        for(key in listData) {
             market = listData[key], balance = new Number(market.balance), avg_buy_price = new Number(market.avg_buy_price), trade_price = new Number(market.trade_price);
             if(market.market == "KRW-KRW"){
                 assetsKrw += balance;
@@ -91,6 +85,9 @@ function initAssets(){
         totalYield = ((totalBenefitPrice / totalPrice) * 100) - 100;    // ((총 평가 금액 / 총 매수 금액) * 100) - 100
         totalSum = assetsKrw + totalBenefitPrice;                       // 보유 KRW + 총 평가 금액
 
+        for(key in listData) {
+            listData[key]["chargePercent"] = ((new Number(listData[key]["balance"]) * new Number(listData[key]["trade_price"])) / totalSum) * 100;
+        }
         logWrite("보유 KRW :" + Math.round(assetsKrw).toLocaleString());
         logWrite("총 보유 자산 :" + Math.round(totalSum).toLocaleString());
         logWrite("총 매수 금액 :" + Math.round(totalPrice).toLocaleString());
@@ -98,12 +95,15 @@ function initAssets(){
         logWrite("총 평가 손익 :" + Math.round(totalBenefit).toLocaleString());
         logWrite("총 평가 수익률 :" + new Number(totalYield).toFixed(2));
         
+        initAssetsKrw({assetsKrw : assetsKrw, totalSum : totalSum, totalPrice : totalPrice, totalBenefitPrice : totalBenefitPrice, totalBenefit : totalBenefit, totalYield : totalYield});
+        updateAssetsDonutChart(listData);
+        initTradeTable(listData);
         /* 화면 초기화 */
-        document.getElementById("cryptos").innerHTML = ""
+        // document.getElementById("cryptos").innerHTML = ""
         /* 화면 드로잉 */
-        for(key in listData) {
-            $cryptos.append(createCrypto(listData[key]));
-        }
+        // for(key in listData) {
+            // $cryptos.append(createCrypto(listData[key]));
+        // }
 
         
 
@@ -298,3 +298,272 @@ function deleteOrders(uuid){
     });
 }
 
+function initAssetsKrw(assets){
+    let krwHtml     = '<i>KRW</i>';
+    let percentHtml = '<i>%</i>';
+    document.getElementById("assetsKrw").innerHTML          = Math.round(assets.assetsKrw).toLocaleString() + krwHtml;            // 보유 KRW
+    document.getElementById("totalSum").innerHTML           = Math.round(assets.totalSum).toLocaleString() + krwHtml;             // 총 보유 자산
+    document.getElementById("totalPrice").innerHTML         = Math.round(assets.totalPrice).toLocaleString() + krwHtml;           // 총 매수 금액
+    document.getElementById("totalBenefitPrice").innerHTML  = Math.round(assets.totalBenefitPrice).toLocaleString() + krwHtml;    // 총 평가 금액
+    document.getElementById("totalBenefit").innerHTML       = Math.round(assets.totalBenefit).toLocaleString() + krwHtml;         // 총 평가 손익
+    document.getElementById("totalYield").innerHTML         = new Number(assets.totalYield).toFixed(2) + percentHtml;             // 총 평가 수익률
+}
+
+function updateAssetsDonutChart(assets){
+    let series = new Array();
+    let labels = new Array();
+    let market;
+    
+    for(key in assets) {
+        market = assets[key];
+        if(market.market == "KRW-KRW"){
+            labels.push("KRW");
+            series.push(new Number(market.chargePercent.toFixed(1)));
+        }
+        if(market.avg_buy_price == 0 || !market.isAssetsCoin){
+            continue;
+        }
+ 
+        labels.push(market.coin_name);
+        series.push(new Number(market.chargePercent.toFixed(1)));
+    }
+
+    let opts = $Global["myAssetsChart"].opts;
+    opts.labels = labels;
+    opts.series = series;
+    $Global["myAssetsChart"].updateOptions(opts, true);
+}
+
+function createAssetsDonutChart(){
+    let options = {
+        series : [1,2,3,],
+        chart: {
+            width: 340,
+            type: 'pie',
+        },
+        labels: ["label1","label2","label3"],
+        dataLabels: {
+            enabled: false
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                 show: false
+                }
+            }
+        }]
+        ,legend: {
+            position: 'left',
+            offsetY: 0,
+        }
+    };
+    
+    $Global["myAssetsChart"] = new ApexCharts(document.querySelector("#myAssetsChart"), options);
+    $Global["myAssetsChart"].render();
+}
+
+function initTradeTable(data){
+    let market, table = document.querySelector("#tradeTable");
+ 
+    for(let key in data){
+        market = data[key];
+        if(market.market == "KRW-KRW"){
+            continue;
+        }
+    
+        tr = createMarketRow(market);
+        tr.dataset.market = market.market;
+        tr.data = market;
+        table.querySelector("tbody").appendChild(tr);
+    }
+}
+
+function createMarketRow(row){
+    let tr,td,a,em,p,strong;
+
+    tr = document.createElement("tr");
+    td = document.createElement("td");
+    td.classList = "title";
+    a = document.createElement("a");
+    a.href="#";
+    strong = document.createElement("strong");
+    strong.innerHTML = row.korean_name;
+    a.appendChild(strong);
+    td.appendChild(a);
+
+    em = document.createElement("em");
+    em.innerHTML = row.market;
+    td.appendChild(em);
+
+    tr.appendChild(td);
+    td = document.createElement("td");
+    td.classList = "price";
+    strong = document.createElement("strong");
+    strong.innerHTML = row.trade_price;
+    td.appendChild(strong);
+    tr.appendChild(td);
+
+    td = document.createElement("td");
+    td.classList = "change";
+    p = document.createElement("p");
+    p.innerHTML = "-";
+    em = document.createElement("em");
+    em.innerHTML = "-";
+    td.appendChild(p);
+    td.appendChild(em);
+    tr.appendChild(td);
+
+    td = document.createElement("td");
+    td.classList = "price24";
+    p = document.createElement("p");
+    p.innerHTML = "-";
+    td.appendChild(p);
+    tr.appendChild(td);
+
+    return tr;
+
+}
+
+function initAssetsMarketAll(){
+    let request = new Object();
+    request["type"] = "KRW";
+    tradeAssets(request).then(function(data){
+        let listData = data;
+        console.log(listData);
+        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].selectMarket, request, function(data) {
+            let dbData = data;
+            let assetsArr = new Array();
+            for(let i in listData){
+                for(let j in dbData){
+                    if(listData[i].market == dbData[j].market && listData[i].isAssetsCoin){
+                        dbData[j]["balance"] = listData[i].balance;
+                        dbData[j]["avg_buy_price"] = listData[i].avg_buy_price;
+                        assetsArr.push(dbData[j]);
+                        break;
+                    }
+                }
+            }
+
+            // for(let i in assetsArr){
+                // insertAssetsMarket(assetsArr[i]);
+            // }
+        });
+    }).catch(function(err) {
+        logWrite("[initMySQL][tradeAssets] - 보유 자산 조회 오류 발생", err);
+    });
+}
+
+function initAssetsMarketUsedTrade(){
+    let request = new Object();
+    
+    CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].selectAssetsMarketUsedTrade, request, function(data) {
+        let assets = data;
+        let request = new Object();
+        request["marketStr"] = CommonUtil.getMarketArrayName(data, returnString);
+        getTicker(request).then(function(data){
+            logWrite("[initAssetsMarketUsedTrade][getTicker] - Success");
+console.log(data);
+            let tickers = data, table = document.querySelector("#usedTradeTable"), tr;
+            for(let i in assets) {
+                for(let j in tickers){
+                    if(assets[i].market == tickers[j].market) {
+                        assets[i]["low_price"]          = tickers[j].low_price;
+                        assets[i]["opening_price"]      = tickers[j].opening_price;
+                        assets[i]["high_price"]         = tickers[j].high_price;
+                        assets[i]["trade_price"]        = tickers[j].trade_price;
+                        assets[i]["prev_closing_price"] = tickers[j].prev_closing_price;
+                        tr = createUsedTradeMarket(assets[i]);
+                        tr.dataset.market = assets[i].market;
+                        tr.data = assets[i];
+                        table.querySelector("tbody").appendChild(tr);
+                        break;
+                    }
+                }
+            }
+        }).catch(function(err) {
+            logWrite("[initAssetsMarketUsedTrade][getTicker] - Error", err);
+        });
+
+    });
+}
+
+function createUsedTradeMarket(row){
+    let tr,td;
+
+    tr = document.createElement("tr");
+    
+    //코인명
+    td = document.createElement("td");
+    td.innerHTML = row.name_korea +"(" + row.market_ui +")";      
+    tr.appendChild(td);
+    //보유 수량
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? row.balance : "-";
+    tr.appendChild(td);
+    //평균 단가
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? new Number(row.avg_buy_price).toLocaleString() : "-";
+    tr.appendChild(td);
+    //매수 금액
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? new Number(row.balance * row.avg_buy_price).toLocaleString() : "-";
+    tr.appendChild(td);
+    //현재가
+    td = document.createElement("td");
+    td.innerHTML = new Number(row.trade_price).toLocaleString();
+    tr.appendChild(td);
+    //평가 금액
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? new Number(row.balance * row.trade_price).toLocaleString() :"-";
+    tr.appendChild(td);
+    //평가 손익
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? new Number((row.balance * row.trade_price) - (row.balance * row.avg_buy_price)).toLocaleString() : "-";
+    tr.appendChild(td);
+    //수익률
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ?new Number((row.trade_price / row.avg_buy_price) * 100 - 100).toFixed(2) + "%" : "-";
+    // td.innerHTML = ((row.balance * row.trade_price / row.balance * row.avg_buy_price) * 100) - 100;
+    tr.appendChild(td);
+    //거래 상태
+    td = document.createElement("td");
+    td.innerHTML = (row.trade_flag == 'Y') ? "지정 코인" : "미지정";
+    tr.appendChild(td);
+
+    totalBenefit = totalBenefitPrice - totalPrice;                  // 총 평가 금액 - 총 매수 금액
+    totalYield = ((totalBenefitPrice / totalPrice) * 100) - 100;    // ((총 평가 금액 / 총 매수 금액) * 100) - 100
+    totalSum = assetsKrw + totalBenefitPrice;                       // 보유 KRW + 총 평가 금액
+
+
+    return tr;
+}
+
+function selectAssetsMarket(){
+    let request = new Object();
+    CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].selectAssetsMarket, request, function(data) {
+        console.log(data);
+    });
+}
+
+function insertAssetsMarket(assets){
+    let request = new Object();
+    request["market_id"] = assets.market_id;
+    request["balance"] = assets.balance;
+    request["avg_buy_price"] = assets.avg_buy_price;
+    request["status"] = 1;
+    CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].insertTrade, request, function(data) {
+        console.log(data);
+    });
+}
+
+function deleteAssetsMarket(assets){
+    let request = new Object();
+    request["market_id"] = assets.trade_id;
+    CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].insertTrade, request, function(data) {
+        console.log(data);
+    });
+}

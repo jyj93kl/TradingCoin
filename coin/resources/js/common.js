@@ -1,4 +1,4 @@
-const CommonUtil = {
+const CommonUtil = { 
     sendMessage : function(sc, method, url, request, callback){
         if(callback != null){
             sc.getSocket().off(url).on(url, callback);
@@ -8,7 +8,9 @@ const CommonUtil = {
         console.log("==== send url ====", url);
         console.log("==== send request ====", request);
         /* request push method */
-        request["method"] = method;
+        if(method.indexOf("upbit/") != -1){
+            request["method"] = method;
+        }
         sc.getSocket().emit(url, JSON.stringify(request));
     },
     getYield : function(nowMarket,assets){

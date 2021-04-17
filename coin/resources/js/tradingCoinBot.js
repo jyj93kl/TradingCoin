@@ -1,3 +1,4 @@
+/* 실제 자동화로 돌아갈 함수  */
 function tradingCoinBot(){
     let request = new Object();
     tradeAssets(request).then(function(data){
@@ -20,7 +21,6 @@ function tradingCoinBot(){
         /* 평균 단가 기준 수익률 기준 +10% 이상 매도 && 평균 단가 기준 수익률 기준 -5% 이하 매수 */
         lowAndHighAssets(existAssets);
     }).catch(function(err) {
-        console.log(err);
         logWrite("[tradingCoinBot][tradeAssets] - 보유 자산 조회 오류 발생", err);
     });
 }

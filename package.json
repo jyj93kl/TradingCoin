@@ -12,6 +12,7 @@
     "express": "3.2.6",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "mybatis-mapper": "^0.6.5",
     "mysql": "^2.18.1",
     "properties": "^1.2.1",
     "querystring": "^0.2.1",
