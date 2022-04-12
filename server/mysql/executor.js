@@ -14,77 +14,96 @@ mybatis.createMapper([ "./server/mappers/market.xml" ]);
   param 4: 불러올 정보의 포맷
 */
 const executor = {
-  selectMarket : function(socket, message, request){
-    executeQuery("market.selectMarkets", request, function(result, data){
-      socket.emit(message, data);
+  selectMarket : async function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.selectMarkets",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  selectAssetsMarket : function(socket, message, request){
-    executeQuery("market.selectAssetsMarket", request, function(result, data){
-      socket.emit(message, data);
+  selectAssetsMarketUsedTrade : function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.selectAssetsMarketUsedTrade",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  insertMarketTrade : function(socket, message, request){
-    executeQuery("market.insertMarketTrade", request, function(result, data){
-      socket.emit(message, data);
+  selectAssetsMarket : function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.selectAssetsMarket",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  updateMarketTrade : function(socket, message, request){
-    executeQuery("market.updateMarketTrade", request, function(result, data){
-      socket.emit(message, data);
+  insertMarketTrade : function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.insertMarketTrade",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  deleteMarketTrade : function(socket, message, request){
-    executeQuery("market.deleteMarketTrade", request, function(result, data){
-      socket.emit(message, data);
+  updateMarketTrade : function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.updateMarketTrade",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
-  selectAssetsMarketUsedTrade : function(socket, message, request){
-    executeQuery("market.selectAssetsMarketUsedTrade", request, function(result, data){
-      socket.emit(message, data);
+  deleteMarketTrade : function(request){
+    return new Promise(async function(resolve, reject) {
+      try {
+        let [rows, fields] = await executeQuery("market.deleteMarketTrade",request);
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
-  
 }
 
-function executeQuery(mapper, request, callback){
+// function executeQuery(mapper, request, callback){
+//   let namespace = mapper.split(".")[0];
+//   let id = mapper.split(".")[1];
+
+//   return new Promise(function(resolve, reject) {
+//     connector.connectionPool.getConnection(function (err, conn) {
+//       (!err) ? resolve(conn) : error(err);
+//     });
+//   }).then(function(conn){
+//     let query = mybatis.getStatement(namespace, id, (request != undefined) ? request : new Object(), format);
+//     conn.query(query, [], function(err, result, field){
+//       (err) ? callback(-1, err) : callback(1, result);
+//     });
+//     conn.release();
+//   });
+// }
+
+async function executeQuery(mapper, request){
   let namespace = mapper.split(".")[0];
   let id = mapper.split(".")[1];
-
-  return new Promise(function(resolve, reject) {
-    connector.connectionPool.getConnection(function (err, conn) {
-      (!err) ? resolve(conn) : error(err);
-    });
-  }).then(function(conn){
-    let query = mybatis.getStatement(namespace, id, (request != undefined) ? request : new Object(), format);
-    conn.query(query, [], function(err, result, field){
-      (err) ? callback(-1, err) : callback(1, result);
-    });
-    conn.release();
-  });
-}
-
-function error(err){
-  console.log(err);
-}
-
-function initialize(){
-  let initData = selectMarket({ market_id : 3 });
-  console.log(initData);
-  let param = {market_id : 1};
-  let query = mybatis.getStatement('market', 'selectMarkets', param, format);
-
-  connector.getConnection(function(conn){
-    conn.query(query, [], function(err, result, field){
-      if (err) throw err;
-      console.log(result);
-    });
-
-    conn.release();
-  })
+  let conn = await connector.getConnection();
+  let query = mybatis.getStatement(namespace, id, (request != undefined) ? request : new Object(), format);
+  let result = conn.query(query);
+  conn.release();
+  return result;
 }
 
 module.exports = {
   executor : executor,
-  initialize : initialize
+  executeQuery : executeQuery
 };

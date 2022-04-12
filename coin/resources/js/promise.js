@@ -55,15 +55,14 @@ function postOrders(request) {
     let requestData = (request != undefined) ? request : new Object();
     requestData["callUrl"] = requestUrl.orders;
     requestData["type"] = 1;
-
+    console.log("postOrder");
     throw '미쳤니 영재야 그만해';
-    
     return false;
-
+   
     return new Promise(function(resolve, reject) {
         CommonUtil.sendMessage(serverSocket, "POST", $Global["serverMessage"].orders, requestData, function(data) {
             let response = JSON.parse(data);
-            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
+            (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(response.data);
         });
     });
 }
@@ -104,7 +103,7 @@ function getMarketAll(request) {
     requestData["callUrl"] = requestUrl.marketAll;
 
     return new Promise(function(resolve, reject) {
-        CommonUtil.sendMessage(serverSocket, "GET", $Global["serverMessage"].marketAll, requestData, function(data) {
+        CommonUtil.sendMessage(serverSocket, "POST", $Global["serverMessage"].marketAll, requestData, function(data) {
             let response = JSON.parse(data);
             (response.result == -1) ? reject(JSON.parse(response.data)) : resolve(JSON.parse(response.data));
         });

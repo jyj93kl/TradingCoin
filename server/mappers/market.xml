@@ -46,8 +46,23 @@
   </update>
 
   <delete id="deleteMarketTrade">
-    delete from mt_market_trade where trade_id = #{trade_id}
+    delete from mt_market_trade
+    <if test="trade_id != null">
+    where type = #{trade_id}
+    </if>
   </delete>
-
+  
+  <select id="selectMmeberKey">
+  select  m.member_id,
+          user_name,
+          user_id,
+          access_key,
+          secret_key 
+  from  mt_member m 
+  inner join  mt_member_api a on m.member_id = a.member_id 
+  <if test="member_id != null">
+  where m.member_id = #{member_id}
+  </if>
+  </select>
 
 </mapper>

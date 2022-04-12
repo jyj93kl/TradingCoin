@@ -8,7 +8,7 @@ const CommonUtil = {
         console.log("==== send url ====", url);
         console.log("==== send request ====", request);
         /* request push method */
-        if(method.indexOf("upbit/") != -1){
+        if(url.indexOf("upbit/") != -1){
             request["method"] = method;
         }
         sc.getSocket().emit(url, JSON.stringify(request));

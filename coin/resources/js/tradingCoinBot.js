@@ -95,13 +95,14 @@ function lowAssetsBuy(assets){
         # 시장가 매도 시 price 값 null 입력
         # 시장가 매수 시 volumn 값 null 입력
 */
+
 function orderTarget(marketData, type){
     let marketName = CommonUtil.getMarketName(marketData);
     let orderData = new Object();
     orderData["market"] = marketName;
     orderData["side"] = (type == 0) ? "bid" : "ask";
     orderData["volume"] = (type == 0) ? null : marketData.balance;
-    orderData["price"] = (type == 0) ? buyPrice : null;
+    orderData["price"] = (type == 0) ? new String(buyPrice) : null;
     orderData["ord_type"] = (type == 0) ? "price" : "market";
     orderData["identifier"] = $Global["uniqueTicket"];
     logWrite("[orderTarget] - " + (((type == 0) ? "<span class='log_buy'>매수</span>" : "<span class='log_sell'>매도</span>")) + " " + marketName + ", 수익률" + CommonUtil.getAssetsYield(marketData) + ", 전일 대비 수익률 : " + CommonUtil.getPrevAssetsYield(marketData));
@@ -115,6 +116,7 @@ function orderMarket(orderData){
     logWrite("시장가 매수,매도 API 데이터", request);
     // postOrders(request).then(function(data){
     //     logWrite("[orderMarket][postOrders] - 시장가 매수 매도 API" + data);
+    //     initUidv4()(;
     // }).catch(function(err) {
     //     logWrite("[orderMarket][postOrders] - 시장가 매수 매도 API 오류 발생", err);
     // });
